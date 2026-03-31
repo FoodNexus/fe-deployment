@@ -37,21 +37,21 @@
                 {{ product.weight }} kg
               </span>
               <ng-template #noWeight>
-                <span class="text-muted">Non renseigné</span>
+                <span class="text-muted fst-italic">Non renseigné</span>
               </ng-template>
             </td>
             <td>
               <span *ngIf="product.destination; else noDest"
-                    [class]="getDestinationClass(product.destination)">
+                    [class]="getDestinationClass(product.destination!)">
                 {{ product.destination }}
               </span>
               <ng-template #noDest>
-                <span class="text-muted">Non renseigné</span>
+                <span class="text-muted fst-italic">Non renseigné</span>
               </ng-template>
             </td>
             <td>{{ product.inspectionCase?.caseId }}</td>
             <td>
-              <a [routerLink]="['recycling-products/edit', product.logId]"
+              <a [routerLink]="['/audit/recycling-products/edit', product.logId]"
                  class="btn btn-sm btn-outline-primary me-1">
                 <i class="bi bi-pencil"></i>
               </a>

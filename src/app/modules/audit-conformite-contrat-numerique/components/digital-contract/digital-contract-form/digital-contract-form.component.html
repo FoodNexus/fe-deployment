@@ -18,52 +18,32 @@
 
           <form [formGroup]="form" (ngSubmit)="submit()">
 
-            <!-- Delivery ID -->
-            <div class="mb-3">
-              <label class="form-label fw-bold">Delivery ID *</label>
-              <input type="number" formControlName="deliveryId"
-                     class="form-control" placeholder="ID de la livraison"/>
-              <div *ngIf="form.get('deliveryId')?.invalid && 
-                          form.get('deliveryId')?.touched"
-                   class="text-danger small">Obligatoire</div>
-            </div>
-
-            <!-- Donor ID -->
-            <div class="mb-3">
-              <label class="form-label fw-bold">Donor ID *</label>
-              <input type="number" formControlName="donorId"
-                     class="form-control" placeholder="ID du donateur"/>
-              <div *ngIf="form.get('donorId')?.invalid && 
-                          form.get('donorId')?.touched"
-                   class="text-danger small">Obligatoire</div>
-            </div>
-
-            <!-- Receiver ID -->
-            <div class="mb-3">
-              <label class="form-label fw-bold">Receiver ID *</label>
-              <input type="number" formControlName="receiverId"
-                     class="form-control" placeholder="ID du receveur"/>
-              <div *ngIf="form.get('receiverId')?.invalid && 
-                          form.get('receiverId')?.touched"
-                   class="text-danger small">Obligatoire</div>
-            </div>
-
-            <!-- Valeur fiscale -->
+            <!-- Valeur fiscale seulement -->
             <div class="mb-3">
               <label class="form-label fw-bold">
                 Valeur de déduction fiscale (TND) *
               </label>
-              <input type="number" formControlName="fiscalDeductionValue"
-                     class="form-control" placeholder="Ex: 250.00"
+              <input type="number"
+                     formControlName="fiscalDeductionValue"
+                     class="form-control"
+                     placeholder="Ex: 250.00"
                      step="0.01"/>
-              <div *ngIf="form.get('fiscalDeductionValue')?.invalid && 
+              <div *ngIf="form.get('fiscalDeductionValue')?.invalid &&
                           form.get('fiscalDeductionValue')?.touched"
                    class="text-danger small">Obligatoire</div>
             </div>
 
+            <!-- Info -->
+            <div class="alert alert-info">
+              <i class="bi bi-info-circle me-2"></i>
+              Le contrat sera automatiquement lié à votre compte,
+              à la livraison et au receveur concerné.
+            </div>
+
             <!-- Boutons -->
             <div class="d-flex gap-2 justify-content-end mt-4">
-              <button type="button" (click)="cancel()"
+              <button type="button"
+                      (click)="cancel()"
                       class="btn btn-outline-secondary">
                 Annuler
               </button>

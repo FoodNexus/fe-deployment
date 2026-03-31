@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, 
+import { ReactiveFormsModule, FormBuilder,
          FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { InspectionCaseService } 
+import { InspectionCaseService }
   from '../../../services/inspection-case.service';
-import { ResolutionStatus, SanitaryVerdict } 
+import { ResolutionStatus, SanitaryVerdict }
   from '../../../models/inspection-case.model';
 
 @Component({
@@ -34,15 +34,14 @@ export class InspectionCaseFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Seulement description + verdict + status
+    // auditorId et deliveryId seront récupérés automatiquement côté backend
     this.form = this.fb.group({
       description:      ['', Validators.required],
       sanitaryVerdict:  ['', Validators.required],
-      resolutionStatus: [''],
-      deliveryId:       ['', [Validators.required, Validators.min(1)]],
-      auditorId:        ['', [Validators.required, Validators.min(1)]]
+      resolutionStatus: ['']
     });
 
-    // Mode Edit
     this.caseId = this.route.snapshot.params['id'];
     if (this.caseId) {
       this.isEdit = true;
@@ -61,7 +60,7 @@ export class InspectionCaseFormComponent implements OnInit {
 
     if (this.isEdit) {
       this.service.update(this.caseId, data).subscribe({
-        next: () => this.router.navigate(['../inspection-cases']),
+        next: () => this.router.navigate(['/audit/inspection-cases']),
         error: () => {
           this.errorMessage = 'Erreur de modification';
           this.loading = false;
@@ -69,7 +68,7 @@ export class InspectionCaseFormComponent implements OnInit {
       });
     } else {
       this.service.create(data).subscribe({
-        next: () => this.router.navigate(['../inspection-cases']),
+        next: () => this.router.navigate(['/audit/inspection-cases']),
         error: () => {
           this.errorMessage = 'Erreur de création';
           this.loading = false;
@@ -79,6 +78,6 @@ export class InspectionCaseFormComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['../inspection-cases']);
+    this.router.navigate(['/audit/inspection-cases']);
   }
 }

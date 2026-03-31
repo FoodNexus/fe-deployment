@@ -12,7 +12,6 @@
 
         <div class="card-body">
 
-          <!-- Erreur -->
           <div *ngIf="errorMessage" class="alert alert-danger">
             {{ errorMessage }}
           </div>
@@ -27,7 +26,7 @@
                         rows="3"
                         placeholder="Décrivez l'anomalie...">
               </textarea>
-              <div *ngIf="form.get('description')?.invalid && 
+              <div *ngIf="form.get('description')?.invalid &&
                           form.get('description')?.touched"
                    class="text-danger small">
                 Description obligatoire
@@ -43,49 +42,22 @@
                   {{ v }}
                 </option>
               </select>
-              <div *ngIf="form.get('sanitaryVerdict')?.invalid && 
+              <div *ngIf="form.get('sanitaryVerdict')?.invalid &&
                           form.get('sanitaryVerdict')?.touched"
                    class="text-danger small">
                 Verdict obligatoire
               </div>
             </div>
 
-            <!-- Statut (seulement en mode edit) -->
+            <!-- Statut seulement en mode edit -->
             <div class="mb-3" *ngIf="isEdit">
               <label class="form-label fw-bold">Statut de résolution</label>
               <select formControlName="resolutionStatus" class="form-select">
+                <option value="">-- Choisir --</option>
                 <option *ngFor="let s of resolutionStatuses" [value]="s">
                   {{ s }}
                 </option>
               </select>
-            </div>
-
-            <!-- Delivery ID -->
-            <div class="mb-3">
-              <label class="form-label fw-bold">Delivery ID *</label>
-              <input type="number"
-                     formControlName="deliveryId"
-                     class="form-control"
-                     placeholder="ID de la livraison"/>
-              <div *ngIf="form.get('deliveryId')?.invalid && 
-                          form.get('deliveryId')?.touched"
-                   class="text-danger small">
-                Delivery ID obligatoire
-              </div>
-            </div>
-
-            <!-- Auditor ID -->
-            <div class="mb-3">
-              <label class="form-label fw-bold">Auditor ID *</label>
-              <input type="number"
-                     formControlName="auditorId"
-                     class="form-control"
-                     placeholder="ID de l'auditeur"/>
-              <div *ngIf="form.get('auditorId')?.invalid && 
-                          form.get('auditorId')?.touched"
-                   class="text-danger small">
-                Auditor ID obligatoire
-              </div>
             </div>
 
             <!-- Boutons -->

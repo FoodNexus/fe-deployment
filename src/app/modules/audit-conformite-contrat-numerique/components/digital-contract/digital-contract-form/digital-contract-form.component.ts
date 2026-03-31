@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, 
+import { ReactiveFormsModule, FormBuilder,
          FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { DigitalContractService } 
+import { DigitalContractService }
   from '../../../services/digital-contract.service';
 
 @Component({
@@ -26,11 +26,10 @@ export class DigitalContractFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Seulement fiscalDeductionValue
+    // donorId, receiverId, deliveryId → récupérés automatiquement côté backend
     this.form = this.fb.group({
-      deliveryId:          ['', [Validators.required, Validators.min(1)]],
-      donorId:             ['', [Validators.required, Validators.min(1)]],
-      receiverId:          ['', [Validators.required, Validators.min(1)]],
-      fiscalDeductionValue:['', [Validators.required, Validators.min(0)]]
+      fiscalDeductionValue: ['', [Validators.required, Validators.min(0)]]
     });
   }
 
@@ -39,7 +38,7 @@ export class DigitalContractFormComponent implements OnInit {
     this.loading = true;
 
     this.service.create(this.form.value).subscribe({
-      next: () => this.router.navigate(['../contracts']),
+      next: () => this.router.navigate(['/audit/contracts']),
       error: (err) => {
         this.errorMessage = err.error?.message || 'Erreur de création';
         this.loading = false;
@@ -48,6 +47,6 @@ export class DigitalContractFormComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['../contracts']);
+    this.router.navigate(['/audit/contracts']);
   }
 }
