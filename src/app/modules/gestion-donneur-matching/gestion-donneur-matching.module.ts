@@ -52,6 +52,7 @@ import { LearningDashboardComponent } from './components/ai/learning-dashboard/l
     FormsModule,
     HttpClientModule,
     GestionDonneurMatchingRoutingModule
-  ]
+  ],
+    exports: [DashboardDonneurComponent]
 })
 export class GestionDonneurMatchingModule {}

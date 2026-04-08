@@ -24,7 +24,7 @@ import { QualityCheckComponent } from './components/ai/quality-check/quality-che
 import { LearningDashboardComponent } from './components/ai/learning-dashboard/learning-dashboard.component';
 
 const routes: Routes = [
-  { path: '', component: DashboardDonneurComponent },
+  { path: 'dashboard', component: DashboardDonneurComponent },
   { path: 'produits', component: ProduitListComponent },
   { path: 'produits/nouveau', component: ProduitFormComponent },
   { path: 'produits/modifier/:id', component: ProduitFormComponent },

@@ -7,6 +7,8 @@ import { GestionUserRoutingModule } from './gestion-user-routing.module';
 import { HomeComponent } from './components/home/home.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CompleteProfileComponent } from './components/complete-profile/complete-profile.component';
+import { DashboardDonneurComponent } from '../gestion-donneur-matching/components/dashboard-donneur/dashboard-donneur.component';
+import { GestionDonneurMatchingModule } from '../gestion-donneur-matching/gestion-donneur-matching.module';
 @NgModule({
   declarations: [
     HomeComponent,
@@ -18,7 +20,8 @@ import { CompleteProfileComponent } from './components/complete-profile/complete
     ReactiveFormsModule,
     FormsModule,
     RouterModule,
-    GestionUserRoutingModule
+    GestionUserRoutingModule,
+    GestionDonneurMatchingModule
   ]
 })
 export class GestionUserModule { }

@@ -3,7 +3,7 @@
     <h2><i class="bi bi-basket me-2"></i>Produits</h2>
   </div>
   <div class="col-md-6 text-end">
-    <a routerLink="../produits/ajouter" class="btn btn-success">
+    <a routerLink="/user/produits/nouveau" class="btn btn-success">
       <i class="bi bi-plus-circle me-1"></i>Ajouter un produit
     </a>
   </div>
@@ -64,11 +64,11 @@
             </td>
             <td>{{ produit.poidsUnitaire }}</td>
             <td>
-              <a [routerLink]="['../produits', produit.idProduit]"
+              <a [routerLink]="['/user/produits', produit.idProduit]"
                  class="btn btn-sm btn-outline-primary me-1">
                 <i class="bi bi-eye"></i>
               </a>
-              <a [routerLink]="['../produits/modifier', produit.idProduit]"
+              <a [routerLink]="['/user/produits/modifier', produit.idProduit]"
                  class="btn btn-sm btn-outline-warning me-1">
                 <i class="bi bi-pencil"></i>
               </a>
