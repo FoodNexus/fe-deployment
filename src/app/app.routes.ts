@@ -11,5 +11,10 @@ export const routes: Routes = [
     loadChildren: () => import('./modules/gestion-user/gestion-user.module')
       .then(m => m.GestionUserModule)
   },
+  {
+    path: 'Donateur',
+    loadChildren: () => import('./modules/gestion-donneur-matching/gestion-donneur-matching.module')
+      .then(m => m.GestionDonneurMatchingModule)
+  },
   { path: '', redirectTo: 'user/home', pathMatch: 'full' }
 ];

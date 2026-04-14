@@ -33,13 +33,7 @@
 
     <!-- Donor Dashboard -->
     <div class="col-md-6" *ngIf="hasRole('DONOR')">
-      <div class="card border-success shadow-sm mb-4">
-        <div class="card-header bg-success text-white">DONNEUR - Matching</div>
-        <div class="card-body">
-          <p>Gérez vos dons de nourriture et trouvez des receveurs.</p>
-          <button class="btn btn-success">Ajouter une Donation</button>
-        </div>
-      </div>
+      <app-dashboard-donneur></app-dashboard-donneur>
     </div>
 
     <!-- Receiver Dashboard -->

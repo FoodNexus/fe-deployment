@@ -4,17 +4,17 @@ export function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
     keycloak.init({
       config: {
-        url: 'http://localhost:8180',
+        url: 'http://localhost:8080',
         realm: 'foodnexus',
-        clientId: 'foodnexus-app'
+        clientId: 'foodnexus-app'  // Remplacez par votre client ID
       },
       initOptions: {
-        onLoad: 'check-sso',
-        silentCheckSsoRedirectUri:
-          window.location.origin + '/silent-check-sso.html'
+        onLoad: 'login-required',  // Plus de check-sso, plus besoin du fichier HTML
+        checkLoginIframe: false,
+        pkceMethod: 'S256'
       },
-      // Habilite la capture du bearer token pour les appels API
       enableBearerInterceptor: true,
-      bearerExcludedUrls: ['/assets', '/clients/public'],
+      bearerPrefix: 'Bearer',
+      bearerExcludedUrls: ['/assets']
     });
 }
