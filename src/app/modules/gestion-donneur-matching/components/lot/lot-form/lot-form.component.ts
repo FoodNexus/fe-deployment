@@ -3,10 +3,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { LotService } from '../../../services/lot.service';
 import { LotRequest } from '../../../models/lot.model';
 import { NiveauUrgence } from '../../../models/enums.model';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-lot-form',
-  templateUrl: './lot-form.component.html'
+  templateUrl: './lot-form.component.html',
+  styleUrls: ['./lot-form.component.scss'],
+  encapsulation: ViewEncapsulation.None  
 })
 export class LotFormComponent implements OnInit {
 

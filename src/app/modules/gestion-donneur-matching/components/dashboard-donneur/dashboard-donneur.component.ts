@@ -7,10 +7,13 @@ import { ProduitResponse } from '../../models/produit.model';
 import { LotResponse } from '../../models/lot.model';
 import { MatchFractionneResponse } from '../../models/match-fractionne.model';
 import { HistoriqueResponse } from '../../models/historique.model';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard-donneur',
-  templateUrl: './dashboard-donneur.component.html'
+  templateUrl: './dashboard-donneur.component.html',
+  styleUrls: ['./dashboard-donneur.component.scss'],
+  encapsulation: ViewEncapsulation.None  
 })
 export class DashboardDonneurComponent implements OnInit {
 
