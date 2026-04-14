@@ -7,10 +7,13 @@ import { LotResponse } from '../../../models/lot.model';
 import { HistoriqueResponse } from '../../../models/historique.model';
 import { MatchFractionneResponse } from '../../../models/match-fractionne.model';
 import { StatutLot } from '../../../models/enums.model';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-lot-detail',
-  templateUrl: './lot-detail.component.html'
+  templateUrl: './lot-detail.component.html',
+  styleUrls: ['./lot-detail.component.scss'],
+  encapsulation: ViewEncapsulation.None  
 })
 export class LotDetailComponent implements OnInit {
 
@@ -51,22 +54,23 @@ export class LotDetailComponent implements OnInit {
     }
   }
 
-  getStatutBadge(s: string): string {
-    switch (s) {
-      case 'PREDIT_DISPONIBLE': return 'bg-primary';
-      case 'EN_COURS_MATCHING': return 'bg-warning text-dark';
-      case 'MATCH_VALIDE': return 'bg-success';
-      case 'ORIENTE_RECYCLAGE': return 'bg-secondary';
-      default: return 'bg-dark';
+  getStatutClass(statut: string): string {
+    switch (statut) {
+      case 'PREDIT_DISPONIBLE':   return 'statut-disponible';
+      case 'EN_COURS_MATCHING':   return 'statut-en-cours';
+      case 'MATCH_VALIDE':        return 'statut-termine';
+      case 'ORIENTE_RECYCLAGE':   return 'statut-default';
+      default:                    return 'statut-default';
     }
   }
 
-  getUrgenceBadge(u: string): string {
-    switch (u) {
-      case 'CRITIQUE': return 'bg-danger';
-      case 'MOYEN': return 'bg-warning text-dark';
-      case 'FAIBLE': return 'bg-info';
-      default: return 'bg-secondary';
+  getUrgenceClass(urgence: string): string {
+    switch (urgence) {
+      case 'CRITIQUE': return 'urgence-critique';
+      case 'HAUTE':    return 'urgence-haute';
+      case 'NORMALE':  return 'urgence-normale';
+      case 'BASSE':    return 'urgence-basse';
+      default:         return 'urgence-normale';
     }
   }
 }

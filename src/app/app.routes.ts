@@ -12,7 +12,7 @@ export const routes: Routes = [
       .then(m => m.GestionUserModule)
   },
   {
-    path: 'Donateur',
+    path: 'donneur',
     loadChildren: () => import('./modules/gestion-donneur-matching/gestion-donneur-matching.module')
       .then(m => m.GestionDonneurMatchingModule)
   },
