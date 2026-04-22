@@ -86,8 +86,18 @@ const routes: Routes = [
       .then(m => m.DigitalContractPdfComponent)
   },
 
-  // Default
-  { path: '', redirectTo: 'inspection-cases', pathMatch: 'full' }
+  // Audit Statistics Dashboard
+  {
+    path: 'statistics',
+    canActivate: [AuthGuard],
+    data: { roles: ['AUDITOR'] },
+    loadComponent: () => import('./components/audit-stats/audit-stats.component')
+      .then(m => m.AuditStatsComponent)
+  },
+
+  // Redirect old dashboard level to main user dashboard to avoid broken links
+  { path: 'dashboard', redirectTo: '/user/dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '/user/dashboard', pathMatch: 'full' }
 ];
 
 @NgModule({

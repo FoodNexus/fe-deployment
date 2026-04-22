@@ -41,7 +41,7 @@ export class AiScannerComponent {
   ) {
     this.form = this.fb.group({
       description: ['', Validators.required],
-      deliveryId: [null, Validators.required]
+      delevry_to: ['', Validators.required]
     });
   }
 
@@ -88,7 +88,7 @@ export class AiScannerComponent {
     
     const inspectionData = {
       description: this.form.value.description,
-      deliveryId: this.form.value.deliveryId,
+      delevry_to: this.form.value.delevry_to,
       sanitaryVerdict: this.verdict,
       auditorId: currentUser?.idUser || 0,
       resolutionStatus: ResolutionStatus.EN_COURS

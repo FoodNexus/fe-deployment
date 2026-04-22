@@ -25,9 +25,9 @@ export class InspectionCaseService {
     );
   }
 
-  getByDelivery(deliveryId: number): Observable<InspectionCase[]> {
+  getByDelivery(delevry_to: string): Observable<InspectionCase[]> {
     return this.http.get<InspectionCase[]>(
-      `${this.apiUrl}/delivery/${deliveryId}`
+      `${this.apiUrl}/delivery/${delevry_to}`
     );
   }
 
@@ -47,11 +47,11 @@ export class InspectionCaseService {
     return this.http.post<InspectionCase>(this.apiUrl, data);
   }
 
-  scan(image: File, auditorId: number, deliveryId: number, description?: string): Observable<InspectionCase> {
+  scan(image: File, auditorId: number, delevry_to: string, description?: string): Observable<InspectionCase> {
     const formData = new FormData();
     formData.append('image', image);
     formData.append('auditorId', auditorId.toString());
-    formData.append('deliveryId', deliveryId.toString());
+    formData.append('delevry_to', delevry_to);
     if (description) {
       formData.append('description', description);
     }

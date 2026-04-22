@@ -7,6 +7,8 @@ import { GestionUserRoutingModule } from './gestion-user-routing.module';
 import { HomeComponent } from './components/home/home.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CompleteProfileComponent } from './components/complete-profile/complete-profile.component';
+import { NotificationBellComponent } from '../audit-conformite-contrat-numerique/components/notification-bell/notification-bell.component';
+
 @NgModule({
   declarations: [
     HomeComponent,
@@ -18,6 +20,7 @@ import { CompleteProfileComponent } from './components/complete-profile/complete
     ReactiveFormsModule,
     FormsModule,
     RouterModule,
+    NotificationBellComponent,
     GestionUserRoutingModule
   ]
 })
