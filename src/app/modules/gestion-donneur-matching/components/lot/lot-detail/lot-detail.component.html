@@ -1,6 +1,5 @@
 <div class="page-container" *ngIf="lot">
 
-  <!-- HEADER -->
   <div class="page-header">
     <div class="page-title">
       <div class="title-icon">
@@ -18,23 +17,28 @@
       <a routerLink="/donneur/lots" class="btn-back me-3">
         <i class="bi bi-archive"></i> Retour aux lots
       </a>
+      
       <button class="btn-add"
+              style="background: linear-gradient(45deg, #6b46c1, #9f7aea); border: none;"
               *ngIf="lot.statut === 'PREDIT_DISPONIBLE'"
-              (click)="lancerMatching()">
-        <i class="bi bi-cpu"></i> Lancer Matching
+              (click)="fractionnerIntelligemment()"
+              [disabled]="isLoadingIA">
+        <i class="bi" [ngClass]="isLoadingIA ? 'bi-hourglass-split' : 'bi-stars'"></i>
+        {{ isLoadingIA ? 'Calcul K-Means en cours...' : 'Smart Batching (IA)' }}
       </button>
     </div>
   </div>
 
-  <!-- ERROR -->
   <div *ngIf="errorMessage" class="alert-error">
     <i class="bi bi-exclamation-circle"></i> {{ errorMessage }}
   </div>
 
-  <!-- INFOS + STATUT -->
+  <div *ngIf="successMessage" class="alert-success" style="background-color: #d1fae5; color: #065f46; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+    <i class="bi bi-check-circle-fill"></i> {{ successMessage }}
+  </div>
+
   <div class="detail-grid">
 
-    <!-- Informations -->
     <div class="info-card premium">
       <div class="form-header">
         <div class="header-icon">
@@ -78,7 +82,6 @@
       </div>
     </div>
 
-    <!-- Changer statut -->
     <div class="info-card premium">
       <div class="form-header warning">
         <div class="header-icon">
@@ -119,7 +122,6 @@
     </div>
   </div>
 
-  <!-- PRODUITS / HISTORIQUES -->
   <div class="table-card">
     <div class="table-header info" style="display: flex; justify-content: space-between; align-items: center;">
       <h5>
@@ -165,7 +167,6 @@
     </div>
   </div>
 
-  <!-- MATCHS -->
   <div class="table-card" *ngIf="matchs.length > 0" style="margin-top: 1.5rem;">
     <div class="table-header success">
       <h5>

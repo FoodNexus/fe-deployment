@@ -70,8 +70,6 @@
     <table class="modern-table" *ngIf="produits.length > 0">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Code-barre</th>
           <th>Libellé</th>
           <th>Catégorie</th>
           <th>Poids (kg)</th>
@@ -81,19 +79,16 @@
       <tbody>
         <tr *ngFor="let produit of paginatedProduits; let i = index"
             [style.animation-delay]="i * 0.05 + 's'">
-          <td><span class="case-id">#{{ produit.idProduit }}</span></td>
-          <td><span class="code-barre">{{ produit.codeBarre }}</span></td>
           <td><span class="product-name">{{ produit.libelle }}</span></td>
           <td>
             <span class="badge-pill" [ngClass]="getCategorieClass(produit.categorie)">
               {{ produit.categorie }}
             </span>
           </td>
-          <td>{{ produit.poidsUnitaire }}</td>
-          <td>
+<td class="text-right">{{ produit.poidsUnitaire }} kg</td>          <td>
             <div class="actions-cell">
               <a [routerLink]="['/user/produits', produit.idProduit]"
-                 class="btn-action view" title="Voir">
+                 class="btn-action view" aria-label="Voir">
                 <i class="bi bi-eye"></i>
               </a>
               <a [routerLink]="['/user/produits/modifier', produit.idProduit]"

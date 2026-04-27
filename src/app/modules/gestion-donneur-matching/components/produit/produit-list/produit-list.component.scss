@@ -332,8 +332,9 @@ app-produit-list,
 }
 
 .product-name {
-  font-weight: 600;
-  color: #1a1a2e;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #111827;
 }
 
 .code-barre {
@@ -531,4 +532,9 @@ app-produit-list,
     flex-direction: column;
     text-align: center;
   }
+  .text-right {
+  text-align: right;
+  font-weight: 600;
+  color: #374151;
+}
 }
