@@ -4,16 +4,16 @@
   <div class="page-header">
     <div class="page-title">
       <div class="title-icon blue">
-        <i class="bi bi-camera"></i>
+        <i class="bi bi-camera-fill"></i>
       </div>
       <div class="title-text">
         <h2>Scanner OCR</h2>
-        <p>Prenez une photo de votre produit pour extraire code-barre et péremption</p>
+        <p>Photographiez un produit — L'IA extrait automatiquement le code-barre et la date de péremption</p>
       </div>
     </div>
     <div class="header-actions">
       <a routerLink="../" class="btn-back">
-        <i class="bi bi-arrow-left"></i> Retour au centre IA
+        <i class="bi bi-arrow-left"></i> Retour au Centre IA
       </a>
     </div>
   </div>
@@ -23,92 +23,128 @@
     <!-- INPUT CARD -->
     <div class="form-card">
       <div class="form-header blue-header">
-        <div class="header-icon">
-          <i class="bi bi-cloud-arrow-up"></i>
-        </div>
+        <div class="header-icon"><i class="bi bi-cloud-arrow-up-fill"></i></div>
         <div>
           <h3>Photo du produit</h3>
-          <p>Importez l'image du code-barre étiquette</p>
+          <p>Déposez ou sélectionnez une image</p>
         </div>
       </div>
 
       <div class="form-body">
-        <div class="form-group">
-          <label class="form-label fw-bold">Photo du produit</label>
-          <div class="file-upload-wrapper">
-            <input type="file" class="form-input file-input" accept="image/*" (change)="onFileSelected($event)">
+        <!-- DROP ZONE -->
+        <div class="drop-zone"
+             [class.drag-active]="dragOver"
+             [class.has-file]="selectedFile"
+             (dragover)="onDragOver($event)"
+             (dragleave)="onDragLeave($event)"
+             (drop)="onDrop($event)">
+          <div *ngIf="!selectedFile" class="drop-zone-empty">
+            <i class="bi bi-cloud-upload drop-icon"></i>
+            <p class="drop-label">Glissez-déposez votre image ici</p>
+            <p class="drop-sublabel">ou cliquez pour parcourir vos fichiers</p>
+            <label class="btn-file-browse">
+              <i class="bi bi-folder2-open me-1"></i> Choisir un fichier
+              <input type="file" accept="image/*" (change)="onFileSelected($event)" hidden>
+            </label>
+            <p class="drop-hint">JPG, PNG, WEBP — max 10 MB</p>
           </div>
-          <p class="form-hint"><i class="bi bi-info-circle me-1"></i>Formats acceptés : JPG, PNG (max 10MB)</p>
+
+          <div *ngIf="selectedFile" class="drop-zone-preview">
+            <img [src]="imagePreview" alt="Aperçu produit" class="preview-img"/>
+            <div class="file-meta">
+              <i class="bi bi-image-fill text-blue me-1"></i>
+              <span>{{ selectedFile.name }}</span>
+              <button class="btn-remove" (click)="clearFile()"><i class="bi bi-x-lg"></i></button>
+            </div>
+          </div>
         </div>
 
-        <div *ngIf="imagePreview" class="image-preview-container mt-3">
-          <img [src]="imagePreview" class="preview-img" alt="Aperçu">
-        </div>
-
-        <button class="btn-submit blue-btn w-100 mt-4" [disabled]="!selectedFile || loading" (click)="scanner()">
-          <span *ngIf="loading" class="spinner"><i class="bi bi-arrow-repeat spin"></i></span>
-          <span *ngIf="!loading"><i class="bi bi-camera me-2"></i>Scanner le produit</span>
+        <!-- ACTIONS -->
+        <button class="btn-submit blue-btn w-100 mt-4"
+                [disabled]="!selectedFile || loading"
+                (click)="scanner()">
+          <span *ngIf="loading" class="btn-loader">
+            <span class="spinner-mini"></span> Analyse en cours...
+          </span>
+          <span *ngIf="!loading">
+            <i class="bi bi-magic me-2"></i> Lancer le scan IA
+          </span>
         </button>
       </div>
     </div>
 
-    <!-- RESULT CARD -->
+    <!-- RESULT / STATE CARD -->
     <div class="result-card-container">
-      <div class="form-card" *ngIf="result">
+
+      <!-- RESULT -->
+      <div class="form-card result-reveal" *ngIf="result">
         <div class="form-header green-header">
-          <div class="header-icon">
-            <i class="bi bi-check2-circle"></i>
-          </div>
+          <div class="header-icon"><i class="bi bi-check2-circle"></i></div>
           <div>
             <h3>Résultat du scan</h3>
-            <p>Données extraites par l'OCR</p>
+            <p>Informations extraites par l'IA</p>
           </div>
         </div>
 
         <div class="detail-body">
-          <div class="detail-row">
-            <div class="detail-label">Code-barre</div>
-            <div class="detail-value"><span class="badge-pill code">{{ result.codeBarre || 'Non détecté' }}</span></div>
+          <div class="detail-row" *ngIf="result.produitDetecte">
+            <div class="detail-label"><i class="bi bi-tag me-1"></i> Produit détecté</div>
+            <div class="detail-value primary-val">{{ result.produitDetecte }}</div>
           </div>
           <div class="detail-row">
-            <div class="detail-label">Produit détecté</div>
-            <div class="detail-value fw-bold text-dark">{{ result.produitDetecte || 'Non trouvé' }}</div>
+            <div class="detail-label"><i class="bi bi-upc-scan me-1"></i> Code-barre</div>
+            <div class="detail-value">
+              <span class="code-monospace">{{ result.codeBarre || 'Non détecté' }}</span>
+            </div>
           </div>
           <div class="detail-row">
-            <div class="detail-label">Date péremption</div>
-            <div class="detail-value text-danger fw-bold">{{ result.datePeremption || 'Non détectée' }}</div>
+            <div class="detail-label"><i class="bi bi-calendar-x me-1"></i> Date de péremption</div>
+            <div class="detail-value">
+              <span class="date-chip" [class.no-date]="!result.datePeremption">
+                <i class="bi bi-clock me-1"></i>
+                {{ result.datePeremption || 'Non détectée' }}
+              </span>
+            </div>
           </div>
-          <div class="detail-row">
-            <div class="detail-label">Texte brut OCR</div>
-            <div class="detail-value ocr-text">{{ result.texteBrut || '-' }}</div>
+          <div class="detail-row" *ngIf="result.texteBrut">
+            <div class="detail-label"><i class="bi bi-file-text me-1"></i> Texte brut OCR</div>
+            <div class="detail-value ocr-raw">{{ result.texteBrut }}</div>
           </div>
 
-          <div class="mt-4 pt-3 border-top">
-            <button class="btn-create-lot green-btn w-100" (click)="creerLot()" [disabled]="loadingCreation">
-              <span *ngIf="loadingCreation" class="spinner"><i class="bi bi-arrow-repeat spin"></i></span>
-              <span *ngIf="!loadingCreation"><i class="bi bi-plus-circle me-2"></i>Créer le lot automatiquement</span>
+          <div class="lot-action-zone" *ngIf="!lotCree">
+            <p class="lot-hint"><i class="bi bi-info-circle me-1"></i>Créez un lot directement depuis ces données détectées.</p>
+            <button class="btn-submit green-btn w-100" (click)="creerLot()" [disabled]="loadingCreation">
+              <span *ngIf="loadingCreation" class="btn-loader"><span class="spinner-mini"></span> Création...</span>
+              <span *ngIf="!loadingCreation"><i class="bi bi-box-seam me-2"></i>Créer le lot automatiquement</span>
             </button>
           </div>
+
+          <div class="alert-success" *ngIf="lotCree">
+            <i class="bi bi-check-circle-fill"></i>
+            Lot créé avec succès ! Consultez vos <a routerLink="/donneur/lots">lots ici</a>.
+          </div>
         </div>
       </div>
 
-      <!-- STATES -->
-      <div class="empty-state" *ngIf="!result && !error">
-        <div class="empty-icon blue-icon">
-          <i class="bi bi-camera"></i>
-        </div>
+      <!-- EMPTY STATE -->
+      <div class="empty-state" *ngIf="!result && !error && !loading">
+        <div class="empty-icon blue-icon"><i class="bi bi-camera"></i></div>
         <h5>En attente d'image</h5>
-        <p>Veuillez uploader une photo pour l'analyse.</p>
+        <p>Uploadez une photo et lancez le scan pour voir les résultats ici.</p>
       </div>
 
-      <div class="alert-error mt-4" *ngIf="error">
-        <i class="bi bi-exclamation-triangle"></i> {{ error }}
+      <!-- LOADING STATE -->
+      <div class="loading-state" *ngIf="loading">
+        <div class="ai-pulse-ring"></div>
+        <div class="loading-icon"><i class="bi bi-cpu-fill"></i></div>
+        <h5>Analyse en cours...</h5>
+        <p>L'IA lit et interprète l'image</p>
       </div>
 
-      <div class="alert-success mt-4" *ngIf="lotCree">
-        <i class="bi bi-check-circle"></i> Lot d'identifiant #{{ lotCree.lotId }} créé avec succès !
+      <!-- ERROR -->
+      <div class="alert-error" *ngIf="error">
+        <i class="bi bi-exclamation-triangle-fill"></i> {{ error }}
       </div>
-
     </div>
 
   </div>

@@ -1,1 +1,48 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global styles — FoodNexus Application */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  /* Fond global harmonisé avec tous les modules donneur */
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Supprimer le fond blanc par défaut sur router-outlet et app-root */
+app-root {
+  display: block;
+  min-height: 100vh;
+  background: transparent;
+}
+
+/* Assure que les composants Angular ne génèrent pas de fond blanc */
+[_nghost-ng-c0],
+:host {
+  background: transparent;
+}
+
+/* Compat Bootstrap — override background-color: #fff du body par défaut */
+body.bg-white {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+}
+
+/* Désactiver les marges par défaut sur les titres */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+}
+
+/* Scrollbar fine et stylisée */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.25); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.5); }

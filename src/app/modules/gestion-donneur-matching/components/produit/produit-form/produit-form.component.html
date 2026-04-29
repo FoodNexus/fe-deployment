@@ -3,113 +3,170 @@
   <!-- HEADER -->
   <div class="page-header">
     <div class="page-title">
-      <div class="title-icon">
-        <i class="bi" [ngClass]="isEditMode ? 'bi-pencil' : 'bi-plus-circle'"></i>
+      <div class="title-icon" [ngClass]="isEditMode ? 'icon-edit' : 'icon-create'">
+        <i class="bi" [ngClass]="isEditMode ? 'bi-pencil-fill' : 'bi-plus-circle-fill'"></i>
       </div>
       <div class="title-text">
-        <h2>{{ isEditMode ? 'Modifier le produit' : 'Ajouter un produit' }}</h2>
-        <p>{{ isEditMode ? 'Modifiez les informations du produit' : 'Enregistrez un nouveau produit alimentaire' }}</p>
+        <h2>{{ isEditMode ? 'Modifier le produit' : 'Nouveau produit' }}</h2>
+        <p>{{ isEditMode ? 'Mettez à jour les informations de ce produit alimentaire' : 'Ajoutez un produit à votre catalogue de dons' }}</p>
       </div>
     </div>
     <div class="header-actions">
-      <a routerLink="/donneur/dashboard" class="btn-back me-3">
-        <i class="bi bi-arrow-left"></i> Retour au Dashboard
-      </a>
       <a routerLink="/donneur/produits" class="btn-back">
-        <i class="bi bi-basket"></i> Retour aux produits
+        <i class="bi bi-arrow-left"></i> Retour aux produits
       </a>
     </div>
   </div>
 
-  <!-- FORM CARD -->
-  <div class="form-wrapper">
-    <div class="form-card">
+  <!-- SPLIT LAYOUT -->
+  <div class="form-split-layout">
 
-      <!-- HEADER -->
-      <div class="form-header">
-        <div class="header-icon">
-          <i class="bi" [ngClass]="isEditMode ? 'bi-pencil-square' : 'bi-basket'"></i>
+    <!-- LEFT PANEL — Context -->
+    <div class="form-context-panel">
+
+      <div class="context-icon-wrap" [ngClass]="isEditMode ? 'edit-wrap' : 'create-wrap'">
+        <i class="bi" [ngClass]="isEditMode ? 'bi-pencil-fill' : 'bi-basket-fill'"></i>
+      </div>
+
+      <h3 class="context-title">{{ isEditMode ? 'Édition du produit' : 'Nouveau produit' }}</h3>
+      <p class="context-desc">{{ isEditMode ? 'Modifiez les champs nécessaires et enregistrez pour mettre à jour le catalogue.' : 'Renseignez les informations ci-contre pour créer un produit réutilisable dans vos lots.' }}</p>
+
+      <div class="context-checklist">
+        <div class="check-item" [class.done]="produit.codeBarre">
+          <div class="check-bullet" [class.active]="produit.codeBarre">
+            <i class="bi" [ngClass]="produit.codeBarre ? 'bi-check-lg' : 'bi-upc-scan'"></i>
+          </div>
+          <span>Code-barre renseigné</span>
         </div>
-        <div>
-          <h3>{{ isEditMode ? 'Modifier le produit' : 'Nouveau produit' }}</h3>
-          <p>{{ isEditMode ? 'Gérer les informations du produit' : 'Remplissez les informations du produit' }}</p>
+        <div class="check-item" [class.done]="produit.libelle">
+          <div class="check-bullet" [class.active]="produit.libelle">
+            <i class="bi" [ngClass]="produit.libelle ? 'bi-check-lg' : 'bi-tag'"></i>
+          </div>
+          <span>Libellé du produit</span>
+        </div>
+        <div class="check-item" [class.done]="produit.categorie">
+          <div class="check-bullet" [class.active]="produit.categorie">
+            <i class="bi" [ngClass]="produit.categorie ? 'bi-check-lg' : 'bi-collection'"></i>
+          </div>
+          <span>Catégorie sélectionnée</span>
+        </div>
+        <div class="check-item" [class.done]="produit.poidsUnitaire > 0">
+          <div class="check-bullet" [class.active]="produit.poidsUnitaire > 0">
+            <i class="bi" [ngClass]="produit.poidsUnitaire > 0 ? 'bi-check-lg' : 'bi-speedometer2'"></i>
+          </div>
+          <span>Poids unitaire (kg)</span>
         </div>
       </div>
 
-      <!-- ERROR -->
-      <div *ngIf="errorMessage" class="alert-error">
-        <i class="bi bi-exclamation-circle"></i> {{ errorMessage }}
+      <div class="context-tip">
+        <i class="bi bi-lightbulb-fill"></i>
+        <span>Un produit peut être réutilisé dans plusieurs lots. Soyez précis dans le libellé.</span>
       </div>
+    </div>
 
-      <!-- FORM BODY -->
-      <form (ngSubmit)="onSubmit()" #f="ngForm" class="form-body">
-
-        <!-- Code-barre -->
-        <div class="form-group">
-          <label class="form-label">
-            <i class="bi bi-upc-scan me-1"></i> Code-barre
-            <span class="required">*</span>
-          </label>
-          <input type="text" class="form-input"
-                 [(ngModel)]="produit.codeBarre"
-                 name="codeBarre" required
-                 placeholder="Ex: 3017620422003"/>
-        </div>
-
-        <!-- Libellé -->
-        <div class="form-group">
-          <label class="form-label">
-            <i class="bi bi-tag me-1"></i> Libellé
-            <span class="required">*</span>
-          </label>
-          <input type="text" class="form-input"
-                 [(ngModel)]="produit.libelle"
-                 name="libelle" required
-                 placeholder="Ex: Tomates fraîches 1kg"/>
-        </div>
-
-        <!-- Catégorie -->
-        <div class="form-group">
-          <label class="form-label">
-            <i class="bi bi-collection me-1"></i> Catégorie
-            <span class="required">*</span>
-          </label>
-          <div class="select-wrapper">
-            <select class="form-input"
-                    [(ngModel)]="produit.categorie"
-                    name="categorie" required>
-              <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
-            </select>
-            <i class="bi bi-chevron-down select-arrow"></i>
+    <!-- RIGHT PANEL — Form -->
+    <div class="form-main-panel">
+      <div class="form-card">
+        <div class="form-card-header">
+          <div class="mode-badge" [ngClass]="isEditMode ? 'mode-edit' : 'mode-create'">
+            <i class="bi" [ngClass]="isEditMode ? 'bi-pencil' : 'bi-plus-lg'"></i>
+            {{ isEditMode ? 'Mode édition' : 'Création' }}
           </div>
         </div>
 
-        <!-- Poids unitaire -->
-        <div class="form-group">
-          <label class="form-label">
-            <i class="bi bi-speedometer me-1"></i> Poids unitaire (kg)
-            <span class="required">*</span>
-          </label>
-          <input type="number" class="form-input"
-                 [(ngModel)]="produit.poidsUnitaire"
-                 name="poidsUnitaire" required
-                 min="0.01" step="0.01"
-                 placeholder="Ex: 1.00"/>
+        <!-- ERROR -->
+        <div *ngIf="errorMessage" class="alert-error-banner">
+          <i class="bi bi-exclamation-octagon-fill"></i>
+          <span>{{ errorMessage }}</span>
+          <button class="error-close" (click)="errorMessage=''"><i class="bi bi-x-lg"></i></button>
         </div>
 
-        <!-- ACTIONS -->
-        <div class="form-actions mt-4">
-          <a routerLink="/donneur/produits" class="btn-cancel">
-            <i class="bi bi-x-lg me-1"></i> Annuler
-          </a>
-          <button type="submit" class="btn-submit" [disabled]="!f.valid">
-            <i class="bi" [ngClass]="isEditMode ? 'bi-check-lg' : 'bi-plus-circle'"></i>
-            {{ isEditMode ? 'Modifier' : 'Créer' }}
-          </button>
-        </div>
+        <form (ngSubmit)="onSubmit()" #f="ngForm" class="form-body">
 
-      </form>
+          <!-- Row 1: code-barre + libellé -->
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">
+                <i class="bi bi-upc-scan"></i> Code-barre
+                <span class="required-star">*</span>
+              </label>
+              <div class="field-input-wrap">
+                <input type="text" class="field-input"
+                       [(ngModel)]="produit.codeBarre"
+                       name="codeBarre" required
+                       placeholder="Ex: 3017620422003" />
+                <div class="field-focus-bar"></div>
+              </div>
+              <span class="field-hint">Identifiant unique du produit</span>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">
+                <i class="bi bi-tag"></i> Libellé du produit
+                <span class="required-star">*</span>
+              </label>
+              <div class="field-input-wrap">
+                <input type="text" class="field-input"
+                       [(ngModel)]="produit.libelle"
+                       name="libelle" required
+                       placeholder="Ex: Tomates fraîches 1kg" />
+                <div class="field-focus-bar"></div>
+              </div>
+              <span class="field-hint">Nom complet et descriptif</span>
+            </div>
+          </div>
+
+          <!-- Row 2: catégorie + poids -->
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">
+                <i class="bi bi-collection"></i> Catégorie
+                <span class="required-star">*</span>
+              </label>
+              <div class="field-select-wrap">
+                <select class="field-input field-select"
+                        [(ngModel)]="produit.categorie"
+                        name="categorie" required>
+                  <option value="" disabled>Choisir une catégorie…</option>
+                  <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+                </select>
+                <i class="bi bi-chevron-down select-chevron"></i>
+              </div>
+              <span class="field-hint">Type de conservation requis</span>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">
+                <i class="bi bi-speedometer2"></i> Poids unitaire
+                <span class="required-star">*</span>
+              </label>
+              <div class="field-input-wrap suffix-wrap">
+                <input type="number" class="field-input has-suffix"
+                       [(ngModel)]="produit.poidsUnitaire"
+                       name="poidsUnitaire" required
+                       min="0.01" step="0.01"
+                       placeholder="0.00" />
+                <span class="input-unit-badge">kg</span>
+                <div class="field-focus-bar"></div>
+              </div>
+              <span class="field-hint">Poids par unité de produit</span>
+            </div>
+          </div>
+
+          <!-- ACTIONS -->
+          <div class="form-actions">
+            <a routerLink="/donneur/produits" class="btn-cancel">
+              <i class="bi bi-x-lg me-1"></i> Annuler
+            </a>
+            <button type="submit" class="btn-submit" [disabled]="!f.valid">
+              <i class="bi" [ngClass]="isEditMode ? 'bi-floppy-fill' : 'bi-box-seam-fill'"></i>
+              {{ isEditMode ? 'Enregistrer les modifications' : 'Créer le produit' }}
+            </button>
+          </div>
+
+        </form>
+      </div>
     </div>
-  </div>
 
+  </div>
 </div>

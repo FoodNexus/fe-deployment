@@ -1,214 +1,248 @@
 <div class="page-container" *ngIf="lot">
 
+  <!-- HEADER -->
   <div class="page-header">
     <div class="page-title">
       <div class="title-icon">
-        <i class="bi bi-archive"></i>
+        <i class="bi bi-box-seam-fill"></i>
       </div>
       <div class="title-text">
-        <h2>Lot #{{ lot.idLot }}</h2>
-        <p>Détails et gestion du lot de dons</p>
+        <h2>Fiche du Lot</h2>
+        <p>Gérez et visualisez l'état d'avancement de ce lot de dons</p>
       </div>
     </div>
     <div class="header-actions">
-      <a routerLink="/donneur/dashboard" class="btn-back me-3">
-        <i class="bi bi-arrow-left"></i> Retour au Dashboard
-      </a>
-      <a routerLink="/donneur/lots" class="btn-back me-3">
-        <i class="bi bi-archive"></i> Retour aux lots
+      <a routerLink="/donneur/lots" class="btn-back me-2">
+        <i class="bi bi-arrow-left"></i> Retour aux lots
       </a>
       
-      <button class="btn-add"
-              style="background: linear-gradient(45deg, #6b46c1, #9f7aea); border: none;"
+      <button class="btn-smart-batching"
               *ngIf="lot.statut === 'PREDIT_DISPONIBLE'"
               (click)="fractionnerIntelligemment()"
               [disabled]="isLoadingIA">
+        <div class="ai-glow"></div>
         <i class="bi" [ngClass]="isLoadingIA ? 'bi-hourglass-split' : 'bi-stars'"></i>
-        {{ isLoadingIA ? 'Calcul K-Means en cours...' : 'Smart Batching (IA)' }}
+        <span>{{ isLoadingIA ? 'Calcul en cours...' : 'Fractionnement IA' }}</span>
       </button>
     </div>
   </div>
 
-  <div *ngIf="errorMessage" class="alert-error">
-    <i class="bi bi-exclamation-circle"></i> {{ errorMessage }}
+  <!-- ALERTS -->
+  <div *ngIf="errorMessage" class="alert-error-custom">
+    <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
   </div>
-
-  <div *ngIf="successMessage" class="alert-success" style="background-color: #d1fae5; color: #065f46; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+  <div *ngIf="successMessage" class="alert-success-custom">
     <i class="bi bi-check-circle-fill"></i> {{ successMessage }}
   </div>
 
-  <div class="detail-grid">
-
-    <div class="info-card premium">
-      <div class="form-header">
-        <div class="header-icon">
-          <i class="bi bi-info-circle"></i>
-        </div>
-        <div>
-          <h3>Informations du lot</h3>
-          <p>Détails complets et métriques</p>
-        </div>
-      </div>
-      <div class="form-body">
-        <div class="info-row">
-          <span class="info-label">ID</span>
-          <span class="case-id">#{{ lot.idLot }}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Donneur</span>
-          <span class="badge-pill badge-donneur">
-            <i class="bi bi-person"></i>
-            Donneur #{{ lot.donneurId }}
-          </span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Date création</span>
-          <span class="info-value">
-            {{ lot.dateCreation | date:'dd/MM/yyyy HH:mm' }}
-          </span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Statut</span>
-          <span class="badge-pill" [ngClass]="getStatutClass(lot.statut)">
-            {{ lot.statut }}
-          </span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Urgence</span>
-          <span class="badge-pill" [ngClass]="getUrgenceClass(lot.niveauUrgence)">
-            {{ lot.niveauUrgence }}
-          </span>
-        </div>
+  <!-- SUMMARY CARDS ROW -->
+  <div class="summary-row">
+    <!-- Donneur Card -->
+    <div class="summary-card">
+      <div class="summary-icon icon-blue"><i class="bi bi-person-heart"></i></div>
+      <div class="summary-info">
+        <span class="label">Origine</span>
+        <span class="value">{{ donorName }}</span>
       </div>
     </div>
+    <!-- Date Card -->
+    <div class="summary-card">
+      <div class="summary-icon icon-purple"><i class="bi bi-calendar-check"></i></div>
+      <div class="summary-info">
+        <span class="label">Date de création</span>
+        <span class="value">{{ lot.dateCreation | date:'dd MMM yyyy' }}</span>
+      </div>
+    </div>
+    <!-- Urgence Card -->
+    <div class="summary-card outline-card" [ngClass]="getUrgenceClass(lot.niveauUrgence)">
+      <div class="summary-info">
+        <span class="label">Urgence</span>
+        <span class="value tag-value"><i class="bi bi-lightning-charge-fill me-1"></i> {{ lot.niveauUrgence }}</span>
+      </div>
+    </div>
+    <!-- Status Card -->
+     <div class="summary-card outline-card" [ngClass]="getStatutClass(lot.statut)">
+      <div class="summary-info">
+        <span class="label">Statut Actuel</span>
+        <span class="value tag-value"><i class="bi bi-record-circle-fill me-1"></i> {{ lot.statut }}</span>
+      </div>
+    </div>
+  </div>
 
-    <div class="info-card premium">
-      <div class="form-header warning">
-        <div class="header-icon">
-          <i class="bi bi-arrow-repeat"></i>
+  <!-- CONTENT GRID -->
+  <div class="content-wrapper">
+
+    <!-- LEFT COLUMN: Lists -->
+    <div class="lists-column">
+      
+      <!-- PRODUITS -->
+      <div class="modern-card">
+        <div class="card-header-styled info-theme">
+          <div class="header-left">
+            <div class="icon-box"><i class="bi bi-basket-fill"></i></div>
+            <div class="texts">
+              <h3>Produits inclus</h3>
+              <p>Contenu physique du lot</p>
+            </div>
+          </div>
+          <div class="header-right">
+            <span class="count-badge">{{ historiques.length }}</span>
+            <a [routerLink]="['/donneur/historiques/nouveau']" [queryParams]="{lotId: lot.idLot}" class="btn-add-mini">
+              <i class="bi bi-plus-lg"></i> Ajouter
+            </a>
+          </div>
         </div>
-        <div>
-          <h3>État du traitement</h3>
-          <p>Progression et modifications</p>
+
+        <div class="card-body-styled">
+          <table class="styled-table" *ngIf="historiques.length > 0">
+            <thead>
+              <tr>
+                <th>Produit</th>
+                <th>Code-barre</th>
+                <th class="text-center">Quantité</th>
+                <th>Péremption</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let h of historiques">
+                <td class="primary-text">{{ h.libelleProduit }}</td>
+                <td><span class="code-badge">{{ h.codeBarre }}</span></td>
+                <td class="text-center"><span class="qty-badge">{{ h.quantite }}</span></td>
+                <td class="date-text"><i class="bi bi-clock me-1"></i> {{ h.datePeremptionExacte | date:'dd/MM/yyyy' }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div *ngIf="historiques.length === 0" class="empty-state-mini">
+            <div class="empty-icon"><i class="bi bi-inboxes"></i></div>
+            <p>Lot vide, veuillez ajouter des produits.</p>
+          </div>
         </div>
       </div>
-      <div class="form-body">
-        <div class="statut-actions">
-          <button class="btn-statut orange"
-                  (click)="changerStatut('EN_COURS_MATCHING')"
-                  *ngIf="lot.statut === 'PREDIT_DISPONIBLE'">
-            <i class="bi bi-arrow-right-circle me-2"></i>
-            EN_COURS_MATCHING
-          </button>
-          <button class="btn-statut green"
-                  (click)="changerStatut('MATCH_VALIDE')"
-                  *ngIf="lot.statut === 'EN_COURS_MATCHING'">
-            <i class="bi bi-check-circle me-2"></i>
-            MATCH_VALIDE
-          </button>
-          <button class="btn-statut gray"
-                  (click)="changerStatut('ORIENTE_RECYCLAGE')"
-                  *ngIf="lot.statut === 'EN_COURS_MATCHING'">
-            <i class="bi bi-recycle me-2"></i>
-            ORIENTE_RECYCLAGE
-          </button>
-          <div class="statut-final"
-               *ngIf="lot.statut === 'MATCH_VALIDE' || lot.statut === 'ORIENTE_RECYCLAGE'">
-            <i class="bi bi-lock me-2"></i>
-            Statut final — aucune modification possible
+
+      <!-- MATCHS -->
+      <div class="modern-card mt-4" *ngIf="matchs.length > 0">
+        <div class="card-header-styled success-theme">
+          <div class="header-left">
+            <div class="icon-box"><i class="bi bi-box2-heart-fill"></i></div>
+            <div class="texts">
+              <h3>Matchs générés</h3>
+              <p>Affectations aux bénéficiaires</p>
+            </div>
+          </div>
+          <div class="header-right">
+            <span class="count-badge">{{ matchs.length }}</span>
+          </div>
+        </div>
+
+        <div class="card-body-styled">
+          <table class="styled-table">
+            <thead>
+              <tr>
+                <th>Bénéficiaire</th>
+                <th class="text-center">Quantité</th>
+                <th class="text-center">Score IA</th>
+                <th>Date</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let m of matchs">
+                <td>
+                  <div class="receveur-cell">
+                    <div class="receveur-avatar"><i class="bi bi-building"></i></div>
+                    <span>Organisation Partenaire</span>
+                  </div>
+                </td>
+                <td class="text-center"><span class="qty-badge match-qty">{{ m.quantiteAllouee }}</span></td>
+                <td class="text-center">
+                  <div class="score-bar-container">
+                    <span class="score-text">{{ m.scoreMatching }}%</span>
+                    <div class="progress"><div class="progress-fill" [style.width.%]="m.scoreMatching"></div></div>
+                  </div>
+                </td>
+                <td class="date-text">{{ m.dateMatch | date:'dd/MM/yyyy' }}</td>
+                <td><span class="badge-sat">{{ m.statutMatch }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: Actions -->
+    <div class="actions-column">
+      <div class="modern-card sticky-card">
+        <div class="card-header-styled action-theme">
+          <div class="header-left">
+            <div class="icon-box"><i class="bi bi-cpu-fill"></i></div>
+            <div class="texts">
+              <h3>Cycle de vie</h3>
+              <p>Avancement du lot</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card-body-styled timeline-container">
+          <!-- Timeline -->
+          <div class="workflow-steps">
+            <div class="step" [class.active]="lot.statut === 'PREDIT_DISPONIBLE'" [class.passed]="lot.statut !== 'PREDIT_DISPONIBLE'">
+              <div class="step-icon"><i class="bi bi-1-circle"></i></div>
+              <div class="step-content">
+                <h6>Disposition</h6>
+                <p>Création et attente</p>
+              </div>
+            </div>
+            <div class="step-line"></div>
+
+            <div class="step" [class.active]="lot.statut === 'EN_COURS_MATCHING'" [class.passed]="lot.statut === 'MATCH_VALIDE' || lot.statut === 'ORIENTE_RECYCLAGE'">
+              <div class="step-icon"><i class="bi bi-2-circle"></i></div>
+              <div class="step-content">
+                <h6>Matching IA</h6>
+                <p>En cours de traitement</p>
+              </div>
+            </div>
+            <div class="step-line"></div>
+
+            <div class="step final-step" [class.active]="lot.statut === 'MATCH_VALIDE' || lot.statut === 'ORIENTE_RECYCLAGE'">
+              <div class="step-icon"><i class="bi bi-check-all"></i></div>
+              <div class="step-content">
+                <h6>Validation</h6>
+                <p>Statut final</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <hr class="divider">
+          
+          <h6 class="action-title" *ngIf="lot.statut === 'PREDIT_DISPONIBLE' || lot.statut === 'EN_COURS_MATCHING'">Actions disponibles :</h6>
+          
+          <div class="action-buttons">
+            <button class="btn-action-flow btn-start" 
+                    *ngIf="lot.statut === 'PREDIT_DISPONIBLE'" 
+                    (click)="changerStatut('EN_COURS_MATCHING')">
+              <i class="bi bi-play-circle-fill"></i> Démarrer le Matching
+            </button>
+            <button class="btn-action-flow btn-validate" 
+                    *ngIf="lot.statut === 'EN_COURS_MATCHING'" 
+                    (click)="changerStatut('MATCH_VALIDE')">
+              <i class="bi bi-check-circle-fill"></i> Valider les Matchs
+            </button>
+            <button class="btn-action-flow btn-recycle" 
+                    *ngIf="lot.statut === 'EN_COURS_MATCHING'" 
+                    (click)="changerStatut('ORIENTE_RECYCLAGE')">
+              <i class="bi bi-recycle"></i> Orienter au recyclage
+            </button>
+
+            <div class="lock-state" *ngIf="lot.statut === 'MATCH_VALIDE' || lot.statut === 'ORIENTE_RECYCLAGE'">
+              <i class="bi bi-lock-fill"></i> Ce lot est clôturé. Aucune action supplémentaire n'est possible.
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="table-card">
-    <div class="table-header info" style="display: flex; justify-content: space-between; align-items: center;">
-      <h5>
-        <i class="bi bi-clock-history me-2"></i>
-        Produits ({{ historiques.length }})
-      </h5>
-      <a [routerLink]="['/donneur/historiques/nouveau']" [queryParams]="{lotId: lot.idLot}" class="btn-add" style="font-size: 0.8rem; padding: 0.4rem 0.8rem;">
-        <i class="bi bi-plus-lg"></i> Ajouter un produit
-      </a>
-    </div>
-
-    <table class="modern-table" *ngIf="historiques.length > 0">
-      <thead>
-        <tr>
-          <th>Produit</th>
-          <th>Code-barre</th>
-          <th>Quantité</th>
-          <th>Péremption</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let h of historiques; let i = index"
-            [style.animation-delay]="i * 0.05 + 's'">
-          <td><span class="product-name">{{ h.libelleProduit }}</span></td>
-          <td><code class="code-barre">{{ h.codeBarre }}</code></td>
-          <td>
-            <span class="badge-pill badge-count">{{ h.quantite }}</span>
-          </td>
-          <td>{{ h.datePeremptionExacte | date:'dd/MM/yyyy HH:mm' }}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div *ngIf="historiques.length === 0" class="empty-state">
-      <div class="empty-icon">
-        <i class="bi bi-box-seam"></i>
-      </div>
-      <h5>Aucun produit</h5>
-      <p>Ce lot ne contient pas encore de produits.</p>
-      <a [routerLink]="['/donneur/historiques/nouveau']" [queryParams]="{lotId: lot.idLot}" class="btn-add mt-3" style="display: inline-flex;">
-        <i class="bi bi-plus-lg"></i> Ajouter un produit à ce lot
-      </a>
-    </div>
-  </div>
-
-  <div class="table-card" *ngIf="matchs.length > 0" style="margin-top: 1.5rem;">
-    <div class="table-header success">
-      <h5>
-        <i class="bi bi-link-45deg me-2"></i>
-        Matchs ({{ matchs.length }})
-      </h5>
-    </div>
-
-    <table class="modern-table">
-      <thead>
-        <tr>
-          <th>#ID</th>
-          <th>Receveur</th>
-          <th>Quantité</th>
-          <th>Score</th>
-          <th>Date</th>
-          <th>Statut</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let m of matchs; let i = index"
-            [style.animation-delay]="i * 0.05 + 's'">
-          <td><span class="case-id">#{{ m.idMatch }}</span></td>
-          <td>
-            <span class="badge-pill badge-receveur">
-              <i class="bi bi-person"></i>
-              Receveur #{{ m.idReceveur }}
-            </span>
-          </td>
-          <td>
-            <span class="badge-pill badge-count">{{ m.quantiteAllouee }}</span>
-          </td>
-          <td>
-            <span class="badge-pill badge-score">{{ m.scoreMatching }}</span>
-          </td>
-          <td>{{ m.dateMatch | date:'dd/MM/yyyy HH:mm' }}</td>
-          <td>
-            <span class="badge-pill badge-statut-match">{{ m.statutMatch }}</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 
 </div>

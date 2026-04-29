@@ -4,93 +4,96 @@
   <div class="page-header">
     <div class="page-title">
       <div class="title-icon">
-        <i class="bi bi-basket"></i>
+        <i class="bi bi-basket-fill"></i>
       </div>
       <div class="title-text">
-        <h2>Produit #{{ produit.idProduit }}</h2>
-        <p>Détails du produit alimentaire</p>
+        <h2>{{ produit.libelle }}</h2>
+        <p>Fiche détaillée du produit alimentaire</p>
       </div>
     </div>
     <div class="header-actions">
-      <a routerLink="/donneur/dashboard" class="btn-back me-3">
-        <i class="bi bi-arrow-left"></i> Retour au Dashboard
+      <a routerLink="/donneur/produits" class="btn-back">
+        <i class="bi bi-arrow-left"></i> Retour aux produits
       </a>
-      <a routerLink="/donneur/produits" class="btn-back me-3">
-        <i class="bi bi-list-ul"></i> Retour aux produits
-      </a>
-      <a [routerLink]="['/donneur/produits/modifier', produit.idProduit]" class="btn-add">
-        <i class="bi bi-pencil"></i> Modifier
+      <a [routerLink]="['/donneur/produits/modifier', produit.idProduit]" class="btn-edit">
+        <i class="bi bi-pencil-square"></i> Modifier
       </a>
     </div>
   </div>
 
-  <!-- DETAIL CARD -->
-  <div class="form-wrapper">
-    <div class="form-card">
+  <!-- CONTENT -->
+  <div class="detail-wrapper">
 
-      <!-- HEADER -->
-      <div class="form-header">
-        <div class="header-icon">
-          <i class="bi bi-info-circle"></i>
-        </div>
-        <div>
-          <h3>Informations du produit</h3>
-          <p>Détails complets du produit enregistré</p>
-        </div>
+    <!-- PRODUCT IDENTITY CARD -->
+    <div class="identity-card">
+      <div class="product-avatar">
+        <i class="bi bi-basket"></i>
       </div>
-
-      <!-- BODY -->
-      <div class="detail-body">
-
-        <div class="detail-row">
-          <div class="detail-label">
-            <i class="bi bi-hash me-1"></i> ID
-          </div>
-          <div class="detail-value">
-            <span class="case-id">#{{ produit.idProduit }}</span>
-          </div>
-        </div>
-
-        <div class="detail-row">
-          <div class="detail-label">
-            <i class="bi bi-upc-scan me-1"></i> Code-barre
-          </div>
-          <div class="detail-value">
-            <span class="code-barre">{{ produit.codeBarre }}</span>
-          </div>
-        </div>
-
-        <div class="detail-row">
-          <div class="detail-label">
-            <i class="bi bi-tag me-1"></i> Libellé
-          </div>
-          <div class="detail-value">
-            <span class="product-name">{{ produit.libelle }}</span>
-          </div>
-        </div>
-
-        <div class="detail-row">
-          <div class="detail-label">
-            <i class="bi bi-collection me-1"></i> Catégorie
-          </div>
-          <div class="detail-value">
-            <span class="badge-pill" [ngClass]="getCategorieClass(produit.categorie)">
-              {{ produit.categorie }}
-            </span>
-          </div>
-        </div>
-
-        <div class="detail-row">
-          <div class="detail-label">
-            <i class="bi bi-speedometer me-1"></i> Poids unitaire
-          </div>
-          <div class="detail-value">
-            {{ produit.poidsUnitaire }} kg
-          </div>
-        </div>
-
+      <div class="product-identity">
+        <h3 class="product-name">{{ produit.libelle }}</h3>
+        <span class="badge-pill" [ngClass]="getCategorieClass(produit.categorie)">
+          <i class="bi bi-tag-fill"></i> {{ produit.categorie }}
+        </span>
+      </div>
+      <div class="product-weight-badge">
+        <span class="weight-value">{{ produit.poidsUnitaire }}</span>
+        <span class="weight-unit">kg</span>
       </div>
     </div>
+
+    <!-- DETAILS GRID -->
+    <div class="details-grid">
+
+      <div class="detail-card">
+        <div class="detail-icon icon-barcode">
+          <i class="bi bi-upc-scan"></i>
+        </div>
+        <div class="detail-info">
+          <span class="detail-label">Code-barre</span>
+          <span class="detail-value code-barre">{{ produit.codeBarre }}</span>
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <div class="detail-icon icon-category">
+          <i class="bi bi-collection-fill"></i>
+        </div>
+        <div class="detail-info">
+          <span class="detail-label">Catégorie</span>
+          <span class="badge-pill" [ngClass]="getCategorieClass(produit.categorie)">
+            {{ produit.categorie }}
+          </span>
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <div class="detail-icon icon-weight">
+          <i class="bi bi-speedometer2"></i>
+        </div>
+        <div class="detail-info">
+          <span class="detail-label">Poids unitaire</span>
+          <span class="detail-value">{{ produit.poidsUnitaire }} <small>kg</small></span>
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <div class="detail-icon icon-label">
+          <i class="bi bi-tag-fill"></i>
+        </div>
+        <div class="detail-info">
+          <span class="detail-label">Libellé complet</span>
+          <span class="detail-value product-name-val">{{ produit.libelle }}</span>
+        </div>
+      </div>
+
+    </div>
+
   </div>
 
+</div>
+
+<!-- LOADING STATE -->
+<div *ngIf="!produit" class="loading-state">
+  <div class="spinner"></div>
+  <p>Chargement du produit...</p>
 </div>

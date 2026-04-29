@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NlpService, NlpResult, NlpCreateLotResponse } from '../../../services/nlp.service';
+import { AuthService } from '../../../../gestion-user/services/auth.service';
 
 @Component({
   selector: 'app-nlp-analyse',
@@ -14,7 +15,11 @@ export class NlpAnalyseComponent {
   loadingCreation = false;
   error = '';
 
-  constructor(private nlpService: NlpService) {}
+  constructor(private nlpService: NlpService, private authService: AuthService) {}
+
+  get currentDonneurId(): number {
+    return this.authService.getCurrentUser()?.idUser || 1;
+  }
 
   analyser(): void {
     if (!this.texte.trim()) return;
@@ -41,7 +46,7 @@ export class NlpAnalyseComponent {
 
     this.nlpService.creerLotDepuisTexte({
       texte: this.texte,
-      donneurId: 1
+      donneurId: this.currentDonneurId
     }).subscribe({
       next: (res: NlpCreateLotResponse) => {
         this.lotCree = res;

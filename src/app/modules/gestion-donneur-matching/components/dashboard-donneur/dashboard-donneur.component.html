@@ -4,219 +4,254 @@
   <div class="page-header">
     <div class="page-title">
       <div class="title-icon">
-        <i class="bi bi-speedometer2"></i>
+        <i class="bi bi-rocket-takeoff-fill"></i>
       </div>
       <div class="title-text">
-        <h2>Dashboard — Gestion Donneur & Matching</h2>
-        <p>Vue d'ensemble de vos produits, lots, matchs et alertes</p>
+        <h2>Dashboard Analytique</h2>
+        <p>Espace de contrôle de {{ donorName }} • Vue d'ensemble de vos dons et du réseau FoodNexus</p>
       </div>
     </div>
     <div class="header-actions">
-      <a routerLink="/donneur/matching" class="btn-add">
-        <i class="bi bi-cpu"></i> Lancer Matching
+      <a routerLink="/donneur/lots/nouveau" class="btn-create-lot">
+        <i class="bi bi-box-seam"></i> Faire un don
       </a>
     </div>
   </div>
 
-  <!-- STATS PRINCIPALES -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-icon produits">
-        <i class="bi bi-basket"></i>
+  <!-- SECTION: MON IMPACT PERSONNEL -->
+  <h3 class="section-title"><i class="bi bi-person-fill-check"></i> Mon Impact Personnel</h3>
+  <div class="stats-row mb-4">
+    <div class="stat-card glass-panel">
+      <div class="stat-icon custom-purple"><i class="bi bi-archive-fill"></i></div>
+      <div class="stat-info">
+        <h4>{{ lots.length }}</h4>
+        <p>Lots créés</p>
       </div>
+      <div class="stat-bg-icon"><i class="bi bi-archive-fill"></i></div>
+    </div>
+
+    <div class="stat-card glass-panel">
+      <div class="stat-icon custom-blue"><i class="bi bi-basket2-fill"></i></div>
       <div class="stat-info">
         <h4>{{ produits.length }}</h4>
         <p>Produits</p>
       </div>
-      <a routerLink="/donneur/produits" class="stat-link">
-        Voir tout <i class="bi bi-arrow-right"></i>
-      </a>
+      <div class="stat-bg-icon"><i class="bi bi-basket2-fill"></i></div>
     </div>
 
-    <div class="stat-card">
-      <div class="stat-icon lots">
-        <i class="bi bi-archive"></i>
-      </div>
+    <div class="stat-card glass-panel">
+      <div class="stat-icon custom-green"><i class="bi bi-patch-check-fill"></i></div>
       <div class="stat-info">
-        <h4>{{ lots.length }}</h4>
-        <p>Lots</p>
+        <h4>{{ lotsValides.length }}</h4>
+        <p>Lots Matchés</p>
       </div>
-      <a routerLink="/donneur/lots" class="stat-link">
-        Voir tout <i class="bi bi-arrow-right"></i>
-      </a>
+      <div class="stat-bg-icon"><i class="bi bi-patch-check-fill"></i></div>
     </div>
 
-    <div class="stat-card">
-      <div class="stat-icon matchs">
-        <i class="bi bi-link-45deg"></i>
-      </div>
+    <div class="stat-card glass-panel">
+      <div class="stat-icon custom-orange"><i class="bi bi-lightning-charge-fill"></i></div>
       <div class="stat-info">
-        <h4>{{ matchs.length }}</h4>
-        <p>Matchs</p>
+        <h4>{{ matchsEnAttente.length }}</h4>
+        <p>Matchs en attente</p>
       </div>
-      <a routerLink="/donneur/matchs" class="stat-link">
-        Voir tout <i class="bi bi-arrow-right"></i>
-      </a>
-    </div>
-
-    <div class="stat-card">
-      <div class="stat-icon alertes">
-        <i class="bi bi-exclamation-triangle"></i>
-      </div>
-      <div class="stat-info">
-        <h4>{{ alertes.length }}</h4>
-        <p>Alertes péremption</p>
-      </div>
-      <a routerLink="/donneur/historiques" class="stat-link">
-        Voir tout <i class="bi bi-arrow-right"></i>
-      </a>
+      <div class="stat-bg-icon"><i class="bi bi-lightning-charge-fill"></i></div>
     </div>
   </div>
 
-  <!-- SOUS-CARTES ACTIONS -->
-  <div class="actions-row">
-    <div class="action-card">
-      <div class="action-icon attente">
-        <i class="bi bi-hourglass-split"></i>
+  <!-- MAIN GRID -->
+  <div class="dashboard-grid">
+    <!-- COLONNE GAUCHE: Actions & Tableaux -->
+    <div class="grid-col-actions">
+      
+      <!-- QUICK ACTIONS -->
+      <div class="actions-grid mb-4">
+        <a routerLink="/donneur/lots" class="action-btn-modern type-lots">
+          <i class="bi bi-box2-heart"></i>
+          <span>Mes Lots</span>
+        </a>
+        <a routerLink="/donneur/matchs" class="action-btn-modern type-matchs">
+          <i class="bi bi-bezier2"></i>
+          <span>Mes Matchs</span>
+        </a>
+        <a routerLink="/donneur/ai" class="action-btn-modern type-ai">
+          <i class="bi bi-robot"></i>
+          <span>Centre IA</span>
+        </a>
       </div>
-      <h4>{{ lotsDisponibles.length }}</h4>
-      <p>Lots en attente de matching</p>
-      <a routerLink="/donneur/matching" class="btn-outline green">
-        <i class="bi bi-cpu me-1"></i>Lancer matching
-      </a>
-    </div>
 
-    <div class="action-card">
-      <div class="action-icon warning">
-        <i class="bi bi-clock-history"></i>
+      <!-- LOTS CRITIQUES -->
+      <div class="modern-card" *ngIf="lotsCritiques.length > 0">
+        <div class="card-header danger-hdr">
+          <i class="bi bi-exclamation-octagon-fill"></i> <span>Lots critiques ({{ lotsCritiques.length }})</span>
+        </div>
+        <div class="card-body p-0">
+          <table class="minimal-table">
+            <thead>
+              <tr>
+                <th>Lot</th>
+                <th>Création</th>
+                <th>Statut</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let lot of lotsCritiques">
+                <td><span class="badge-tag tag-primary">Lot de {{ donorName }}</span></td>
+                <td class="text-muted">{{ lot.dateCreation | date:'dd/MM' }}</td>
+                <td><span class="badge-tag tag-danger">Attente</span></td>
+                <td>
+                  <a routerLink="/donneur/matching" [queryParams]="{lotId: lot.idLot}" class="btn-micro-danger">Matcher</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <h4>{{ matchsEnAttente.length }}</h4>
-      <p>Matchs en attente logistique</p>
-      <a routerLink="/donneur/matchs" class="btn-outline orange">
-        <i class="bi bi-list me-1"></i>Gérer les matchs
-      </a>
-    </div>
 
-    <div class="action-card">
-      <div class="action-icon success">
-        <i class="bi bi-check-circle"></i>
+      <!-- PÉREMPTIONS PROCHES -->
+      <div class="modern-card mt-4" *ngIf="alertes.length > 0">
+        <div class="card-header warning-hdr">
+          <i class="bi bi-clock-history"></i> <span>Péremptions urgentes ({{ alertes.length }})</span>
+        </div>
+        <div class="card-body p-0">
+          <table class="minimal-table">
+            <thead>
+              <tr>
+                <th>Produit</th>
+                <th>Lot Relié</th>
+                <th>Date Exp.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let h of alertes">
+                <td><span class="font-bold">{{ h.libelleProduit }}</span></td>
+                <td><a [routerLink]="['/donneur/lots', h.lotId]" class="text-link">Voir lot</a></td>
+                <td><span class="badge-tag tag-warning">{{ h.datePeremptionExacte | date:'dd/MM' }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <h4>{{ lotsValides.length }}</h4>
-      <p>Lots validés</p>
-      <a routerLink="/donneur/lots" class="btn-outline teal">
-        <i class="bi bi-archive me-1"></i>Voir les lots
-      </a>
-    </div>
 
-    <div class="action-card">
-      <div class="action-icon ia">
-        <span>🧠</span>
+      <div *ngIf="produits.length === 0 && lots.length === 0" class="empty-state-modern mt-4">
+        <div class="pulse-ring"></div>
+        <i class="bi bi-inboxes-fill"></i>
+        <h4>Bienvenue {{ donorName }} !</h4>
+        <p>C'est ici que s'afficheront toutes vos statistiques personnelles une fois votre premier don créé.</p>
+        <button routerLink="/donneur/lots/nouveau" class="btn-start mt-3">Commencer</button>
       </div>
-      <h4>IA</h4>
-      <p>OCR, NLP, Vision, Learning</p>
-      <a routerLink="/donneur/ai" class="btn-outline dark">
-        <i class="bi bi-robot me-1"></i>Centre IA
-      </a>
-    </div>
-  </div>
 
-  <!-- LOTS CRITIQUES -->
-  <div class="table-card" *ngIf="lotsCritiques.length > 0">
-    <div class="table-header danger">
-      <h5>
-        <i class="bi bi-exclamation-circle me-2"></i>
-        Lots CRITIQUES non traités ({{ lotsCritiques.length }})
-      </h5>
-    </div>
-
-    <table class="modern-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Donneur</th>
-          <th>Date création</th>
-          <th>Produits</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let lot of lotsCritiques; let i = index"
-            [style.animation-delay]="i * 0.05 + 's'">
-          <td><span class="case-id">#{{ lot.idLot }}</span></td>
-          <td>
-            <span class="badge-pill badge-donneur">
-              <i class="bi bi-person"></i> Donneur #{{ lot.donneurId }}
-            </span>
-          </td>
-          <td>{{ lot.dateCreation | date:'dd/MM/yyyy HH:mm' }}</td>
-          <td>
-            <span class="badge-pill badge-count">{{ lot.nombreProduits }}</span>
-          </td>
-          <td>
-            <a routerLink="/donneur/matching"
-               [queryParams]="{lotId: lot.idLot}"
-               class="btn-action-inline danger">
-              <i class="bi bi-cpu me-1"></i>Matcher
+      <!-- ── CATALOGUE PRODUITS (aperçu) ── -->
+      <div class="modern-card mt-4" *ngIf="produits.length > 0">
+        <div class="card-header products-hdr">
+          <span><i class="bi bi-basket-fill me-2"></i>Catalogue produits ({{ produits.length }})</span>
+          <a routerLink="/donneur/produits" class="see-all-link">Voir tout <i class="bi bi-arrow-right ms-1"></i></a>
+        </div>
+        <div class="card-body p-0">
+          <table class="minimal-table">
+            <thead>
+              <tr>
+                <th>Produit</th>
+                <th>Catégorie</th>
+                <th>Poids</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of produits.slice(0, 5)">
+                <td>
+                  <div class="prod-name-cell">
+                    <div class="prod-icon-mini">
+                      <i class="bi bi-box-seam-fill"></i>
+                    </div>
+                    <span class="font-bold">{{ p.libelle }}</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge-tag"
+                        [ngClass]="{'tag-frais': p.categorie === 'FRAIS', 'tag-surgele': p.categorie === 'SURGELE', 'tag-sec': p.categorie === 'SEC'}">
+                    {{ p.categorie }}
+                  </span>
+                </td>
+                <td class="text-muted">{{ p.poidsUnitaire }} kg</td>
+                <td>
+                  <a [routerLink]="['/donneur/produits', p.idProduit]" class="btn-micro-view">
+                    <i class="bi bi-eye"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="see-more-bar" *ngIf="produits.length > 5">
+            <a routerLink="/donneur/produits" class="see-more-link">
+              <i class="bi bi-chevron-double-down me-1"></i>{{ produits.length - 5 }} produits supplémentaires…
             </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+          </div>
+        </div>
+      </div>
 
-  <!-- ALERTES PÉREMPTION -->
-  <div class="table-card" *ngIf="alertes.length > 0" style="margin-top: 1.5rem;">
-    <div class="table-header warning">
-      <h5>
-        <i class="bi bi-clock me-2"></i>
-        Produits qui périment dans 24h
-      </h5>
     </div>
 
-    <table class="modern-table">
-      <thead>
-        <tr>
-          <th>Produit</th>
-          <th>Code-barre</th>
-          <th>Quantité</th>
-          <th>Péremption</th>
-          <th>Lot</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let h of alertes; let i = index"
-            [style.animation-delay]="i * 0.05 + 's'">
-          <td>
-            <span class="product-name">{{ h.libelleProduit }}</span>
-          </td>
-          <td><code class="code-barre">{{ h.codeBarre }}</code></td>
-          <td>
-            <span class="badge-pill badge-count">{{ h.quantite }}</span>
-          </td>
-          <td>
-            <span class="badge-pill badge-danger-text">
-              <i class="bi bi-exclamation-triangle"></i>
-              {{ h.datePeremptionExacte | date:'dd/MM/yyyy HH:mm' }}
-            </span>
-          </td>
-          <td>
-            <a [routerLink]="['/donneur/lots', h.lotId]" class="case-id-link">
-              Lot #{{ h.lotId }}
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <!-- COLONNE DROITE: Communauté -->
+    <div class="grid-col-analytics">
+      <h3 class="section-title text-indigo"><i class="bi bi-globe-americas"></i> Le Réseau FoodNexus</h3>
+      
+      <div class="modern-card network-card h-100">
+        <div class="card-body network-body">
+          
+          <div class="network-header">
+            <h4>Impact Communautaire</h4>
+            <p>Découvrez ce que le réseau accomplit chaque jour grâce à des acteurs comme vous.</p>
+          </div>
 
-  <!-- EMPTY STATE -->
-  <div *ngIf="produits.length === 0 && lots.length === 0 && matchs.length === 0"
-       class="empty-state">
-    <div class="empty-icon">
-      <i class="bi bi-inbox"></i>
+          <div class="analytics-charts">
+            
+            <!-- CIRCULAR GAUGE -->
+            <div class="gauge-container">
+              <div class="circular-chart" [style.--percentage]="tauxMatchingGlobal + '%'">
+                <div class="inner-circle">
+                  <span class="percentage">{{ tauxMatchingGlobal }}%</span>
+                  <span class="label">Lots Matchés</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="stats-list">
+              <div class="stat-line">
+                <div class="stat-icon-micro bg-purple"><i class="bi bi-people-fill"></i></div>
+                <div class="stat-text">
+                  <span class="stat-val">{{ totalDonneursActifs }}</span>
+                  <span class="stat-desc">Donneurs en action</span>
+                </div>
+              </div>
+              
+              <div class="stat-line">
+                <div class="stat-icon-micro bg-emerald"><i class="bi bi-boxes"></i></div>
+                <div class="stat-text">
+                  <span class="stat-val">{{ totalLotsCommunaute }}</span>
+                  <span class="stat-desc">Lots générés au total</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="impact-bar-wrapper">
+             <div class="impact-label">
+                <span>Ma contribution</span>
+                <span>{{ lots.length }} lot(s) sur {{ totalLotsCommunaute }}</span>
+             </div>
+             <div class="impact-bar-bg">
+                <div class="impact-bar-fill" 
+                     [style.width.%]="totalLotsCommunaute > 0 ? (lots.length / totalLotsCommunaute * 100) : 0">
+                </div>
+             </div>
+          </div>
+
+        </div>
+      </div>
+
     </div>
-    <h5>Aucune donnée disponible</h5>
-    <p>Commencez par ajouter des produits ou des lots.</p>
   </div>
 
 </div>

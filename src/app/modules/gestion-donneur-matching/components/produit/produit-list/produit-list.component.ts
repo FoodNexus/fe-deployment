@@ -15,6 +15,7 @@ export class ProduitListComponent implements OnInit {
   selectedCategorie = '';
   categories = Object.values(CategorieProduit);
   successMessage = '';
+  errorMessage = '';
   Math = Math;
 
   // Pagination
@@ -47,19 +48,26 @@ export class ProduitListComponent implements OnInit {
   }
 
   loadProduits(): void {
-    this.produitService.getAll().subscribe(data => {
-      this.produits = data;
-      this.currentPage = 1;
+    this.produitService.getAll().subscribe({
+      next: data => {
+        this.produits = data;
+        this.currentPage = 1;
+      },
+      error: () => {
+        this.errorMessage = 'Erreur lors du chargement des produits.';
+      }
     });
   }
 
   rechercher(): void {
     if (this.searchKeyword.trim()) {
-      this.produitService.rechercher(this.searchKeyword)
-        .subscribe(data => {
+      this.produitService.rechercher(this.searchKeyword).subscribe({
+        next: data => {
           this.produits = data;
           this.currentPage = 1;
-        });
+        },
+        error: () => this.loadProduits()
+      });
     } else {
       this.loadProduits();
     }
@@ -67,11 +75,15 @@ export class ProduitListComponent implements OnInit {
 
   filtrerParCategorie(): void {
     if (this.selectedCategorie) {
-      this.produitService.getByCategorie(this.selectedCategorie as CategorieProduit)
-        .subscribe(data => {
+      this.produitService.getByCategorie(this.selectedCategorie as CategorieProduit).subscribe({
+        next: data => {
           this.produits = data;
           this.currentPage = 1;
-        });
+        },
+        error: () => {
+          this.errorMessage = 'Erreur lors du filtrage.';
+        }
+      });
     } else {
       this.loadProduits();
     }
@@ -79,10 +91,18 @@ export class ProduitListComponent implements OnInit {
 
   supprimer(id: number): void {
     if (confirm('Voulez-vous vraiment supprimer ce produit ?')) {
-      this.produitService.delete(id).subscribe(() => {
-        this.successMessage = 'Produit supprimé avec succès';
-        this.loadProduits();
-        setTimeout(() => this.successMessage = '', 3000);
+      this.errorMessage = '';
+      this.produitService.delete(id).subscribe({
+        next: () => {
+          this.successMessage = 'Produit supprimé avec succès !';
+          this.loadProduits();
+          setTimeout(() => (this.successMessage = ''), 3000);
+        },
+        error: (err) => {
+          this.errorMessage = err?.error?.message
+            ?? "Erreur lors de la suppression. Le produit est peut-être lié à d'autres données.";
+          setTimeout(() => (this.errorMessage = ''), 5000);
+        }
       });
     }
   }
@@ -99,6 +119,7 @@ export class ProduitListComponent implements OnInit {
   reinitialiser(): void {
     this.searchKeyword = '';
     this.selectedCategorie = '';
+    this.errorMessage = '';
     this.loadProduits();
   }
 }
