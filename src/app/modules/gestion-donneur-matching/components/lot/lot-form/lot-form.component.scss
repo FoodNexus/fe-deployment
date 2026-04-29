@@ -16,30 +16,13 @@ app-lot-form,
 app-lot-form .page-container {
   background: transparent;
 }
-
-app-dashboard {
-  display: block;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
-}
-
-app-dashboard > .container {
-  max-width: 100% !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-
-app-dashboard .col-12 {
-  padding: 0 !important;
-}
-
 /* ═══════════════════════════════════════
    PAGE CONTAINER
    ═══════════════════════════════════════ */
 .page-container {
   width: 100%;
   max-width: 100%;
-  margin: 0 auto;
+  margin: 0;
   padding: 0 2rem;
   animation: fadeInUp 0.6s ease-out;
 }
@@ -192,6 +175,63 @@ app-dashboard .col-12 {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+/* ─── CONTEXT BANNER ─── */
+.context-banner {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .donor-context {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    
+    i {
+      font-size: 1.5rem;
+      color: #6366f1;
+      background: rgba(99, 102, 241, 0.1);
+      padding: 0.5rem;
+      border-radius: 10px;
+    }
+
+    .donor-info {
+      display: flex;
+      flex-direction: column;
+      
+      .donor-label {
+        font-size: 0.75rem;
+        color: #64748b;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      
+      .donor-name {
+        font-size: 1.05rem;
+        color: #0f172a;
+        font-weight: 800;
+      }
+    }
+  }
+
+  .status-context {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
 }
 
 /* ─── FORM GROUPS ─── */

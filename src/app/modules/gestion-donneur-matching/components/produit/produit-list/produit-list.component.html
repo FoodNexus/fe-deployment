@@ -7,8 +7,8 @@
         <i class="bi bi-basket"></i>
       </div>
       <div class="title-text">
-        <h2>Gestion des Produits</h2>
-        <p>Consultez, recherchez et gérez vos produits alimentaires</p>
+        <h2>Catalogue des Produits</h2>
+        <p>Gérez efficacement votre inventaire et suivez sa disponibilité</p>
       </div>
     </div>
     <div class="header-actions">
@@ -23,8 +23,16 @@
 
   <!-- SUCCESS -->
   <div *ngIf="successMessage" class="alert-success-custom">
-    <i class="bi bi-check-circle"></i> {{ successMessage }}
+    <i class="bi bi-check-circle-fill"></i> {{ successMessage }}
     <button class="btn-close-custom" (click)="successMessage=''">
+      <i class="bi bi-x"></i>
+    </button>
+  </div>
+
+  <!-- ERROR -->
+  <div *ngIf="errorMessage" class="alert-error-custom">
+    <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
+    <button class="btn-close-custom" (click)="errorMessage=''">
       <i class="bi bi-x"></i>
     </button>
   </div>
@@ -33,28 +41,30 @@
   <div class="filters-card">
     <div class="filters-row">
       <div class="filter-group">
-        <label><i class="bi bi-search me-1"></i>Rechercher</label>
+        <label class="filter-label"><i class="bi bi-search"></i> Rechercher</label>
         <div class="search-box">
-          <i class="bi bi-search"></i>
-          <input type="text"
-                 [(ngModel)]="searchKeyword"
-                 (keyup.enter)="rechercher()"
-                 placeholder="Rechercher par libellé..."/>
+          <i class="bi bi-search search-icon"></i>
+          <input type="text" [(ngModel)]="searchKeyword" (keyup.enter)="rechercher()"
+            placeholder="Rechercher par libellé..." class="search-input" />
+          <button *ngIf="searchKeyword" class="search-clear" (click)="searchKeyword=''; loadProduits()" title="Effacer">
+            <i class="bi bi-x-circle-fill"></i>
+          </button>
         </div>
       </div>
       <div class="filter-group">
-        <label><i class="bi bi-tag me-1"></i>Catégorie</label>
-        <select class="filter-select"
-                [(ngModel)]="selectedCategorie"
-                (change)="filtrerParCategorie()">
-          <option value="">Toutes les catégories</option>
-          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
-        </select>
+        <label class="filter-label"><i class="bi bi-tag"></i> Catégorie</label>
+        <div class="select-wrapper">
+          <i class="bi bi-chevron-down select-arrow"></i>
+          <select class="filter-select" [(ngModel)]="selectedCategorie" (change)="filtrerParCategorie()">
+            <option value="">Toutes les catégories</option>
+            <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+          </select>
+        </div>
       </div>
       <div class="filter-group">
-        <label>&nbsp;</label>
+        <label class="filter-label">&nbsp;</label>
         <button class="btn-reset" (click)="reinitialiser()">
-          <i class="bi bi-arrow-clockwise me-1"></i>Réinitialiser
+          <i class="bi bi-arrow-counterclockwise"></i> Réinitialiser
         </button>
       </div>
     </div>
@@ -77,27 +87,27 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let produit of paginatedProduits; let i = index"
-            [style.animation-delay]="i * 0.05 + 's'">
+        <tr *ngFor="let produit of paginatedProduits; let i = index" [style.animation-delay]="i * 0.05 + 's'">
           <td><span class="product-name">{{ produit.libelle }}</span></td>
           <td>
             <span class="badge-pill" [ngClass]="getCategorieClass(produit.categorie)">
               {{ produit.categorie }}
             </span>
           </td>
-<td class="text-right">{{ produit.poidsUnitaire }} kg</td>          <td>
+          <td class="text-right">{{ produit.poidsUnitaire }} kg</td>
+          <td>
             <div class="actions-cell">
-              <a [routerLink]="['/user/produits', produit.idProduit]"
-                 class="btn-action view" aria-label="Voir">
+              <a [routerLink]="['/user/produits', produit.idProduit]" class="btn-action view" title="Voir les détails">
                 <i class="bi bi-eye"></i>
+                <span class="btn-label">Voir</span>
               </a>
-              <a [routerLink]="['/user/produits/modifier', produit.idProduit]"
-                 class="btn-action edit" title="Modifier">
-                <i class="bi bi-pencil"></i>
+              <a [routerLink]="['/user/produits/modifier', produit.idProduit]" class="btn-action edit" title="Modifier">
+                <i class="bi bi-pencil-square"></i>
+                <span class="btn-label">Modifier</span>
               </a>
-              <button (click)="supprimer(produit.idProduit)"
-                      class="btn-action delete" title="Supprimer">
-                <i class="bi bi-trash3"></i>
+              <button (click)="supprimer(produit.idProduit)" class="btn-action delete" title="Supprimer">
+                <i class="bi bi-trash3-fill"></i>
+                <span class="btn-label">Supprimer</span>
               </button>
             </div>
           </td>
@@ -108,18 +118,17 @@
     <!-- PAGINATION -->
     <div class="pagination-container" *ngIf="totalPages > 1">
       <div class="pagination-info">
-        Affichage de <b>{{ (currentPage - 1) * pageSize + 1 }}</b> à <b>{{ Math.min(currentPage * pageSize, produits.length) }}</b> sur <b>{{ produits.length }}</b> produits
+        Affichage de <b>{{ (currentPage - 1) * pageSize + 1 }}</b> à <b>{{ Math.min(currentPage * pageSize,
+          produits.length) }}</b> sur <b>{{ produits.length }}</b> produits
       </div>
       <div class="pagination-controls">
         <button class="page-nav-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
           <i class="bi bi-chevron-left"></i>
         </button>
-        
+
         <div class="page-numbers">
-          <button *ngFor="let p of pages" 
-                  class="page-number-btn" 
-                  [class.active]="p === currentPage"
-                  (click)="goToPage(p)">
+          <button *ngFor="let p of pages" class="page-number-btn" [class.active]="p === currentPage"
+            (click)="goToPage(p)">
             {{ p }}
           </button>
         </div>

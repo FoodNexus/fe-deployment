@@ -4,15 +4,15 @@
   <div class="page-header">
     <div class="page-title">
       <div class="title-icon">
-        <i class="bi bi-archive"></i>
+        <i class="bi bi-archive-fill"></i>
       </div>
       <div class="title-text">
-        <h2>Gestion des Lots</h2>
-        <p>Consultez, filtrez et gérez tous vos lots de dons</p>
+        <h2>Catalogue de lots</h2>
+        <p>Espace de {{ donorName }} • Gérez efficacement vos lots de dons en temps réel</p>
       </div>
     </div>
     <div class="header-actions">
-      <a routerLink="/user/dashboard" class="btn-back me-3">
+      <a routerLink="/user/dashboard" class="btn-back">
         <i class="bi bi-arrow-left"></i> Retour au Dashboard
       </a>
       <a routerLink="/donneur/lots/nouveau" class="btn-add">
@@ -21,123 +21,149 @@
     </div>
   </div>
 
-  <!-- SUCCESS MESSAGE -->
+  <!-- SUCCESS -->
   <div *ngIf="successMessage" class="alert-success-custom">
-    <i class="bi bi-check-circle"></i> {{ successMessage }}
-    <button class="btn-close-custom" (click)="successMessage=''">
-      <i class="bi bi-x"></i>
-    </button>
+    <i class="bi bi-check-circle-fill"></i> {{ successMessage }}
+    <button class="btn-close-custom" (click)="successMessage=''"><i class="bi bi-x"></i></button>
+  </div>
+
+  <!-- ERROR -->
+  <div *ngIf="errorMessage" class="alert-error-custom">
+    <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
+    <button class="btn-close-custom" (click)="errorMessage=''"><i class="bi bi-x"></i></button>
   </div>
 
   <!-- FILTRES -->
   <div class="filters-card">
     <div class="filters-row">
+
       <div class="filter-group">
-        <label><i class="bi bi-search me-1"></i>Rechercher</label>
+        <label class="filter-label"><i class="bi bi-search"></i> Rechercher</label>
         <div class="search-box">
-          <i class="bi bi-search"></i>
-          <input type="text"
+          <i class="bi bi-search search-icon"></i>
+          <input type="text" class="search-input"
                  [(ngModel)]="searchKeyword"
                  (keyup.enter)="rechercher()"
-                 placeholder="ID Lot ou Donneur..."/>
+                 placeholder="Rechercher par donneur..." />
+          <button *ngIf="searchKeyword" class="search-clear"
+                  (click)="searchKeyword=''; loadLots()" title="Effacer">
+            <i class="bi bi-x-circle-fill"></i>
+          </button>
         </div>
       </div>
 
       <div class="filter-group">
-        <label><i class="bi bi-funnel me-1"></i>Statut</label>
-        <select class="filter-select"
-                [(ngModel)]="selectedStatut"
-                (change)="filtrerParStatut()">
-          <option value="">Tous les statuts</option>
-          <option *ngFor="let s of statuts" [value]="s">{{ s }}</option>
-        </select>
+        <label class="filter-label"><i class="bi bi-funnel"></i> Statut</label>
+        <div class="select-wrapper">
+          <i class="bi bi-chevron-down select-arrow"></i>
+          <select class="filter-select" [(ngModel)]="selectedStatut" (change)="filtrerParStatut()">
+            <option value="">Tous les statuts</option>
+            <option *ngFor="let s of statuts" [value]="s">{{ getStatutLabel(s) }}</option>
+          </select>
+        </div>
       </div>
 
       <div class="filter-group">
-        <label><i class="bi bi-exclamation-triangle me-1"></i>Urgence</label>
-        <select class="filter-select"
-                [(ngModel)]="selectedUrgence"
-                (change)="filtrerParUrgence()">
-          <option value="">Toutes les urgences</option>
-          <option *ngFor="let u of urgences" [value]="u">{{ u }}</option>
-        </select>
+        <label class="filter-label"><i class="bi bi-exclamation-triangle"></i> Urgence</label>
+        <div class="select-wrapper">
+          <i class="bi bi-chevron-down select-arrow"></i>
+          <select class="filter-select" [(ngModel)]="selectedUrgence" (change)="filtrerParUrgence()">
+            <option value="">Toutes les urgences</option>
+            <option *ngFor="let u of urgences" [value]="u">{{ u }}</option>
+          </select>
+        </div>
       </div>
 
       <div class="filter-group">
-        <label>&nbsp;</label>
+        <label class="filter-label">&nbsp;</label>
         <button class="btn-reset" (click)="reinitialiser()">
-          <i class="bi bi-arrow-clockwise me-1"></i>Réinitialiser
+          <i class="bi bi-arrow-counterclockwise"></i> Réinitialiser
         </button>
       </div>
+
     </div>
   </div>
 
   <!-- TABLE -->
   <div class="table-card">
     <div class="table-header">
-      <h5><i class="bi bi-list-ul me-2"></i>Liste des lots</h5>
+      <h5><i class="bi bi-archive me-2"></i>Liste des lots</h5>
       <span class="total-badge">{{ lots.length }} lot(s)</span>
     </div>
 
     <table class="modern-table" *ngIf="lots.length > 0">
       <thead>
         <tr>
-          <th>#ID</th>
-          <th>Donneur</th>
-          <th>Date création</th>
+          <th>Date de création</th>
           <th>Statut</th>
           <th>Urgence</th>
-          <th>Produits</th>
-          <th>Matchs</th>
+          <th class="text-center">Produits</th>
+          <th class="text-center">Matchs</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let lot of paginatedLots; let i = index"
             [style.animation-delay]="i * 0.05 + 's'">
-          <td><span class="case-id">#{{ lot.idLot }}</span></td>
+
+          <!-- DATE -->
           <td>
-            <span class="badge-pill badge-donneur">
-              <i class="bi bi-person"></i>
-              Donneur #{{ lot.donneurId }}
+            <div class="date-cell">
+              <i class="bi bi-calendar3"></i>
+              {{ lot.dateCreation | date:'dd/MM/yyyy' }}
+              <span class="date-time">{{ lot.dateCreation | date:'HH:mm' }}</span>
+            </div>
+          </td>
+
+          <!-- STATUT -->
+          <td>
+            <span class="status-badge" [ngClass]="getStatutClass(lot.statut)">
+              <i class="bi" [ngClass]="getStatutIcon(lot.statut)"></i>
+              {{ getStatutLabel(lot.statut) }}
             </span>
           </td>
-          <td>{{ lot.dateCreation | date:'dd/MM/yyyy HH:mm' }}</td>
+
+          <!-- URGENCE -->
           <td>
-            <span class="badge-pill" [ngClass]="getStatutClass(lot.statut)">
-              {{ lot.statut }}
-            </span>
-          </td>
-          <td>
-            <span class="badge-pill" [ngClass]="getUrgenceClass(lot.niveauUrgence)">
+            <span class="urgence-badge" [ngClass]="getUrgenceClass(lot.niveauUrgence)">
+              <i class="bi bi-lightning-fill"></i>
               {{ lot.niveauUrgence }}
             </span>
           </td>
-          <td>
-            <span class="badge-pill badge-count">
-              {{ lot.nombreProduits }}
+
+          <!-- PRODUITS -->
+          <td class="text-center">
+            <span class="count-badge">
+              <i class="bi bi-basket"></i> {{ lot.nombreProduits }}
             </span>
           </td>
-          <td>
-            <span class="badge-pill badge-count">
-              {{ lot.nombreMatchs }}
+
+          <!-- MATCHS -->
+          <td class="text-center">
+            <span class="count-badge match-count" [class.zero]="lot.nombreMatchs === 0">
+              <i class="bi bi-link-45deg"></i> {{ lot.nombreMatchs }}
             </span>
           </td>
+
+          <!-- ACTIONS -->
           <td>
             <div class="actions-cell">
               <a [routerLink]="['/donneur/lots', lot.idLot]"
-                 class="btn-action view" title="Voir détail">
+                 class="btn-action view" title="Voir les détails">
                 <i class="bi bi-eye"></i>
+                <span class="btn-label">Voir</span>
               </a>
               <a [routerLink]="['/donneur/lots/modifier', lot.idLot]"
                  class="btn-action edit" title="Modifier"
                  *ngIf="lot.statut === 'PREDIT_DISPONIBLE'">
-                <i class="bi bi-pencil"></i>
+                <i class="bi bi-pencil-square"></i>
+                <span class="btn-label">Modifier</span>
               </a>
               <button (click)="supprimer(lot.idLot)"
                       class="btn-action delete" title="Supprimer"
                       *ngIf="lot.statut === 'PREDIT_DISPONIBLE'">
-                <i class="bi bi-trash3"></i>
+                <i class="bi bi-trash3-fill"></i>
+                <span class="btn-label">Supprimer</span>
               </button>
             </div>
           </td>
@@ -148,22 +174,20 @@
     <!-- PAGINATION -->
     <div class="pagination-container" *ngIf="totalPages > 1">
       <div class="pagination-info">
-        Affichage de <b>{{ (currentPage - 1) * pageSize + 1 }}</b> à <b>{{ Math.min(currentPage * pageSize, lots.length) }}</b> sur <b>{{ lots.length }}</b> lots
+        Affichage de <b>{{ (currentPage - 1) * pageSize + 1 }}</b>
+        à <b>{{ Math.min(currentPage * pageSize, lots.length) }}</b>
+        sur <b>{{ lots.length }}</b> lots
       </div>
       <div class="pagination-controls">
         <button class="page-nav-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
           <i class="bi bi-chevron-left"></i>
         </button>
-        
         <div class="page-numbers">
-          <button *ngFor="let p of pages" 
-                  class="page-number-btn" 
-                  [class.active]="p === currentPage"
-                  (click)="goToPage(p)">
+          <button *ngFor="let p of pages" class="page-number-btn"
+                  [class.active]="p === currentPage" (click)="goToPage(p)">
             {{ p }}
           </button>
         </div>
-
         <button class="page-nav-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
           <i class="bi bi-chevron-right"></i>
         </button>
@@ -177,6 +201,9 @@
       </div>
       <h5>Aucun lot trouvé</h5>
       <p>Commencez par créer un nouveau lot de dons.</p>
+      <a routerLink="/donneur/lots/nouveau" class="btn-add-empty">
+        <i class="bi bi-plus-lg"></i> Créer un lot
+      </a>
     </div>
   </div>
 

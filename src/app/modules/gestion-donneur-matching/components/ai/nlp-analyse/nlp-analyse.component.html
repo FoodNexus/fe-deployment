@@ -71,11 +71,11 @@
 
         <div class="detail-body">
           <div class="detail-row">
-            <div class="detail-label">Produit détecté</div>
-            <div class="detail-value fw-bold text-dark">{{ result.produitDetecte || 'Non reconnu' }}</div>
+            <div class="detail-label"><i class="bi bi-tag me-1"></i> Produit détecté</div>
+            <div class="detail-value primary-val">{{ result.produitDetecte || 'Non reconnu' }}</div>
           </div>
           <div class="detail-row">
-            <div class="detail-label">Catégorie</div>
+            <div class="detail-label"><i class="bi bi-grid me-1"></i> Catégorie</div>
             <div class="detail-value">
               <span class="badge-pill" [ngClass]="{
                 'cat-frais': result.categorie === 'FRAIS',
@@ -85,17 +85,21 @@
             </div>
           </div>
           <div class="detail-row">
-            <div class="detail-label">Quantité</div>
+            <div class="detail-label"><i class="bi bi-123 me-1"></i> Quantité</div>
             <div class="detail-value">
-              <span class="badge-pill count">{{ result.quantite }} {{ result.unite }}</span>
+              <span class="qty-detected">{{ result.quantite }} {{ result.unite }}</span>
             </div>
           </div>
           <div class="detail-row">
-            <div class="detail-label">Date péremption</div>
-            <div class="detail-value">{{ result.datePeremption }}</div>
+            <div class="detail-label"><i class="bi bi-calendar-x me-1"></i> Date péremption</div>
+            <div class="detail-value">
+              <span class="date-chip" [class.no-date]="!result.datePeremption">
+                <i class="bi bi-clock me-1"></i>{{ result.datePeremption || 'Non détectée' }}
+              </span>
+            </div>
           </div>
           <div class="detail-row">
-            <div class="detail-label">Urgence déduite</div>
+            <div class="detail-label"><i class="bi bi-lightning-charge me-1"></i> Urgence déduite</div>
             <div class="detail-value">
               <span class="badge-pill" [ngClass]="{
                 'urg-critique': result.urgence === 'CRITIQUE',
@@ -128,7 +132,7 @@
       </div>
 
       <div class="alert-success mt-4" *ngIf="lotCree">
-        <i class="bi bi-check-circle"></i> Lot d'identifiant #{{ lotCree.lotId }} créé avec succès !
+        <i class="bi bi-check-circle-fill"></i> Lot créé avec succès ! <a routerLink="/donneur/lots">Voir mes lots</a>
       </div>
 
     </div>

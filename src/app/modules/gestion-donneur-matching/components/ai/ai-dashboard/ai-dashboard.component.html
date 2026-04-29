@@ -1,93 +1,164 @@
-<div class="page-container">
+<div class="ai-page">
 
-  <!-- HEADER -->
-  <div class="page-header">
-    <div class="page-title">
-      <div class="title-icon">
-        <i class="bi bi-robot"></i>
+  <!-- ═══ HERO BANNER ═══ -->
+  <div class="ai-hero">
+    <div class="hero-orb orb-1"></div>
+    <div class="hero-orb orb-2"></div>
+    <div class="hero-orb orb-3"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        3 Modules actifs
       </div>
-      <div class="title-text">
-        <h2>Intelligence Artificielle</h2>
-        <p>Modules IA intégrés pour automatiser et optimiser la gestion des dons</p>
-      </div>
-    </div>
-    <div class="header-actions">
-      <a routerLink="/user/dashboard" class="btn-back">
-        <i class="bi bi-arrow-left"></i> Retour au Dashboard
+      <h1 class="hero-title">Centre d'Intelligence<br><span class="gradient-text">Artificielle</span></h1>
+      <p class="hero-subtitle">Automatisez la gestion de vos dons grâce aux modules IA intégrés — OCR, Traitement du Langage et Apprentissage Adaptatif.</p>
+      <a routerLink="/donneur/dashboard" class="btn-back-hero">
+        <i class="bi bi-arrow-left me-1"></i> Retour au Dashboard
       </a>
     </div>
+
+    <!-- STAT STRIP -->
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="stat-num">📸</span>
+        <span class="stat-lbl">Scanner par photo</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <span class="stat-num">💬</span>
+        <span class="stat-lbl">Analyse langage naturel</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <span class="stat-num">🧠</span>
+        <span class="stat-lbl">Apprentissage continu</span>
+      </div>
+    </div>
   </div>
 
-  <!-- AI CARDS -->
-  <div class="ai-cards-grid">
+  <!-- ═══ MODULE CARDS ═══ -->
+  <div class="page-container">
 
-    <!-- OCR -->
-    <div class="ai-card border-blue">
-      <div class="card-icon-wrapper blue">
-        <i class="bi bi-camera"></i>
+    <p class="section-label"><i class="bi bi-grid-3x3-gap-fill me-2"></i>Sélectionnez un module</p>
+
+    <div class="module-grid">
+
+      <!-- ── OCR ── -->
+      <div class="module-card">
+        <div class="module-accent blue-accent"></div>
+        <div class="module-left">
+          <div class="module-icon-wrap blue-wrap">
+            <i class="bi bi-camera-fill"></i>
+          </div>
+        </div>
+        <div class="module-center">
+          <div class="module-tag blue-tag">OCR • Computer Vision</div>
+          <h3 class="module-name">Scanner de Produit</h3>
+          <p class="module-desc">Photographiez un produit, l'IA lit le code-barre et extrait la date de péremption en quelques secondes.</p>
+          <div class="module-features">
+            <span class="feat-chip"><i class="bi bi-upc-scan"></i> Code-barre</span>
+            <span class="feat-chip"><i class="bi bi-calendar-x"></i> Péremption</span>
+            <span class="feat-chip"><i class="bi bi-box-seam"></i> Création de lot</span>
+          </div>
+        </div>
+        <div class="module-right">
+          <div class="module-status online">
+            <span class="status-dot"></span> Actif
+          </div>
+          <a routerLink="ocr" class="btn-module blue-btn">
+            Lancer <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
       </div>
-      <h5 class="card-title">Scanner OCR</h5>
-      <p class="card-text">Scannez un produit par photo pour extraire le code-barre et la date de péremption</p>
-      <ul class="feature-list">
-        <li><i class="bi bi-check-circle-fill icon-check"></i> Lecture code-barre</li>
-        <li><i class="bi bi-check-circle-fill icon-check"></i> Extraction date péremption</li>
-        <li><i class="bi bi-check-circle-fill icon-check"></i> Création automatique de lot</li>
-      </ul>
-      <a routerLink="ocr" class="btn-access blue">Accéder <i class="bi bi-arrow-right"></i></a>
+
+      <!-- ── NLP ── -->
+      <div class="module-card">
+        <div class="module-accent green-accent"></div>
+        <div class="module-left">
+          <div class="module-icon-wrap green-wrap">
+            <i class="bi bi-chat-left-text-fill"></i>
+          </div>
+        </div>
+        <div class="module-center">
+          <div class="module-tag green-tag">NLP • Traitement du Langage</div>
+          <h3 class="module-name">Analyse Texte Libre</h3>
+          <p class="module-desc">Décrivez votre don naturellement. L'IA comprend, catégorise et crée automatiquement la fiche produit.</p>
+          <div class="module-features">
+            <span class="feat-chip"><i class="bi bi-award"></i> Reconnaissance</span>
+            <span class="feat-chip"><i class="bi bi-123"></i> Quantité</span>
+            <span class="feat-chip"><i class="bi bi-lightning-charge"></i> Urgence auto</span>
+          </div>
+        </div>
+        <div class="module-right">
+          <div class="module-status online">
+            <span class="status-dot green-dot"></span> Actif
+          </div>
+          <a routerLink="nlp" class="btn-module green-btn">
+            Lancer <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- ── LEARNING ── -->
+      <div class="module-card">
+        <div class="module-accent purple-accent"></div>
+        <div class="module-left">
+          <div class="module-icon-wrap purple-wrap">
+            <i class="bi bi-graph-up-arrow"></i>
+          </div>
+        </div>
+        <div class="module-center">
+          <div class="module-tag purple-tag">ML • Apprentissage Adaptatif</div>
+          <h3 class="module-name">Profils & Apprentissage</h3>
+          <p class="module-desc">Analysez les profils des receveurs partenaires — le système affine ses recommandations en permanence.</p>
+          <div class="module-features">
+            <span class="feat-chip"><i class="bi bi-people"></i> Profils receveurs</span>
+            <span class="feat-chip"><i class="bi bi-percent"></i> Taux succès</span>
+            <span class="feat-chip"><i class="bi bi-star-half"></i> Bonus/Malus</span>
+          </div>
+        </div>
+        <div class="module-right">
+          <div class="module-status online">
+            <span class="status-dot purple-dot"></span> Actif
+          </div>
+          <a routerLink="learning" class="btn-module purple-btn">
+            Explorer <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+
     </div>
 
-    <!-- NLP -->
-    <div class="ai-card border-green">
-      <div class="card-icon-wrapper green">
-        <i class="bi bi-chat-text"></i>
+    <!-- HOW IT WORKS -->
+    <div class="how-it-works">
+      <h4 class="how-title"><i class="bi bi-info-circle me-2"></i>Comment ça fonctionne ?</h4>
+      <div class="steps-row">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-icon"><i class="bi bi-camera"></i></div>
+          <p>Photographiez ou décrivez votre produit en texte libre</p>
+        </div>
+        <div class="step-arrow"><i class="bi bi-chevron-right"></i></div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-icon"><i class="bi bi-cpu"></i></div>
+          <p>L'IA analyse et extrait automatiquement les données clés</p>
+        </div>
+        <div class="step-arrow"><i class="bi bi-chevron-right"></i></div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-icon"><i class="bi bi-box-seam"></i></div>
+          <p>Un lot est créé et prêt pour le matching en un clic</p>
+        </div>
+        <div class="step-arrow"><i class="bi bi-chevron-right"></i></div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-icon"><i class="bi bi-graph-up-arrow"></i></div>
+          <p>Le système apprend de chaque interaction pour s'améliorer</p>
+        </div>
       </div>
-      <h5 class="card-title">Analyse Texte (NLP)</h5>
-      <p class="card-text">Décrivez votre don en texte libre et le système comprendra automatiquement</p>
-      <ul class="feature-list">
-        <li><i class="bi bi-check-circle-fill icon-check"></i> Reconnaissance produit</li>
-        <li><i class="bi bi-check-circle-fill icon-check"></i> Extraction quantité</li>
-        <li><i class="bi bi-check-circle-fill icon-check"></i> Déduction urgence</li>
-      </ul>
-      <a routerLink="nlp" class="btn-access green">Accéder <i class="bi bi-arrow-right"></i></a>
-    </div>
-
-    <!-- Quality -->
-    <div class="ai-card border-orange">
-      <div class="card-icon-wrapper orange">
-        <i class="bi bi-search"></i>
-      </div>
-      <h5 class="card-title">Contrôle Qualité</h5>
-      <p class="card-text">Prenez une photo pour vérifier automatiquement la qualité du produit</p>
-      <ul class="feature-list">
-        <li><i class="bi bi-check-circle-fill icon-check"></i> Analyse visuelle</li>
-        <li><i class="bi bi-check-circle-fill icon-check"></i> Détection moisissure</li>
-        <li><i class="bi bi-check-circle-fill icon-check"></i> Décision auto matching</li>
-      </ul>
-      <a routerLink="quality" class="btn-access orange">Accéder <i class="bi bi-arrow-right"></i></a>
-    </div>
-
-    <!-- Learning -->
-    <div class="ai-card border-purple">
-      <div class="card-icon-wrapper purple">
-        <i class="bi bi-lightbulb"></i>
-      </div>
-      <h5 class="card-title">Apprentissage</h5>
-      <p class="card-text">Consultez comment le système apprend des matchs passés pour s'améliorer</p>
-      <ul class="feature-list">
-        <li><i class="bi bi-check-circle-fill icon-check"></i> Profils receveurs</li>
-        <li><i class="bi bi-check-circle-fill icon-check"></i> Taux de succès</li>
-        <li><i class="bi bi-check-circle-fill icon-check"></i> Bonus/malus adaptatifs</li>
-      </ul>
-      <a routerLink="learning" class="btn-access purple">Accéder <i class="bi bi-arrow-right"></i></a>
     </div>
 
   </div>
-
-  <!-- STATUS BADGE -->
-  <div class="status-container">
-    <span class="badge-status">
-      <span class="pulse-dot"></span> 4 Modules IA actifs et opérationnels
-    </span>
-  </div>
-
 </div>

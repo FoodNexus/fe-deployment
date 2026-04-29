@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../../../gestion-user/services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LotService } from '../../../services/lot.service';
 import { LotRequest } from '../../../models/lot.model';
 import { NiveauUrgence } from '../../../models/enums.model';
-import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-lot-form',
   templateUrl: './lot-form.component.html',
-  styleUrls: ['./lot-form.component.scss'],
-  encapsulation: ViewEncapsulation.None  
+  styleUrls: ['./lot-form.component.scss']
 })
 export class LotFormComponent implements OnInit {
 
@@ -19,16 +18,41 @@ export class LotFormComponent implements OnInit {
   lotId: number | null = null;
   errorMessage = '';
 
-  constructor(private lotService: LotService, private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private lotService: LotService, 
+    private router: Router, 
+    private route: ActivatedRoute,
+    private authService: AuthService
+  ) {}
+
+  get currentDonneurId(): number {
+    return this.authService.getCurrentUser()?.idUser || 0;
+  }
+
+  get donorName(): string {
+    return this.authService.getUsername() || 'Donneur Partenaire';
+  }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.params['id'];
-    if (id) {
-      this.isEditMode = true;
-      this.lotId = +id;
-      this.lotService.getById(this.lotId).subscribe({
-        next: (data) => { this.lot = { donneurId: data.donneurId, niveauUrgence: data.niveauUrgence }; },
-        error: () => this.errorMessage = 'Lot non trouvé'
+    const initForm = () => {
+      this.lot.donneurId = this.currentDonneurId;
+      const id = this.route.snapshot.params['id'];
+      if (id) {
+        this.isEditMode = true;
+        this.lotId = +id;
+        this.lotService.getById(this.lotId).subscribe({
+          next: (data) => { this.lot = { donneurId: data.donneurId, niveauUrgence: data.niveauUrgence }; },
+          error: () => this.errorMessage = 'Lot non trouvé'
+        });
+      }
+    };
+
+    if (this.authService.getCurrentUser()) {
+      initForm();
+    } else {
+      this.authService.fetchUserProfile().subscribe({
+        next: () => initForm(),
+        error: () => this.errorMessage = "Impossible de récupérer votre profil."
       });
     }
   }

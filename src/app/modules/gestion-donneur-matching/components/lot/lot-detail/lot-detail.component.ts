@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../../../gestion-user/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LotService } from '../../../services/lot.service';
 import { HistoriqueService } from '../../../services/historique.service';
@@ -7,13 +8,11 @@ import { LotResponse } from '../../../models/lot.model';
 import { HistoriqueResponse } from '../../../models/historique.model';
 import { MatchFractionneResponse } from '../../../models/match-fractionne.model';
 import { StatutLot } from '../../../models/enums.model';
-import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-lot-detail',
   templateUrl: './lot-detail.component.html',
-  styleUrls: ['./lot-detail.component.scss'],
-  encapsulation: ViewEncapsulation.None  
+  styleUrls: ['./lot-detail.component.scss']
 })
 export class LotDetailComponent implements OnInit {
 
@@ -29,8 +28,13 @@ export class LotDetailComponent implements OnInit {
     private historiqueService: HistoriqueService,
     private matchService: MatchFractionneService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
+
+  get donorName(): string {
+    return this.authService.getUsername() || 'Donneur';
+  }
 
   ngOnInit(): void {
     const id = +this.route.snapshot.params['id'];

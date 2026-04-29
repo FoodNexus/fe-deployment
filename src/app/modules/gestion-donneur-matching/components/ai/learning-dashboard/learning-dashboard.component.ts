@@ -12,6 +12,7 @@ export class LearningDashboardComponent implements OnInit {
   tousLesProfils: ReceveurProfile[] = [];
   loading = false;
   loadingAll = false;
+  loadingAi = false;
   error = '';
   Math = Math;
 
@@ -74,6 +75,22 @@ export class LearningDashboardComponent implements OnInit {
       error: (err: any) => {
         this.error = err.error?.message || 'Erreur lors du chargement des profils';
         this.loadingAll = false;
+      }
+    });
+  }
+
+  lancerPythonAi(): void {
+    this.loadingAi = true;
+    this.error = '';
+    this.learningService.runPythonAi().subscribe({
+      next: (res) => {
+        this.loadingAi = false;
+        // Recharger la liste pour afficher les nouveaux Clusters et Scores !
+        this.chargerTous();
+      },
+      error: (err) => {
+        this.loadingAi = false;
+        this.error = err.message || 'Erreur lors du déclenchement du script Python';
       }
     });
   }

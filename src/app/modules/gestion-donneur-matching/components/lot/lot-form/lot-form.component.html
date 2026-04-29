@@ -44,21 +44,19 @@
 
         <form (ngSubmit)="onSubmit()" #f="ngForm">
 
-          <!-- ID Donneur -->
-          <div class="form-group">
-            <label class="form-label">
-              <i class="bi bi-person me-1"></i>
-              ID du Donneur <span class="required">*</span>
-            </label>
-            <input
-              type="number"
-              class="form-input"
-              [(ngModel)]="lot.donneurId"
-              name="donneurId"
-              required
-              min="1"
-              placeholder="Ex: 1"
-            />
+          <!-- Informations contextuelles -->
+          <div class="context-banner">
+            <div class="donor-context">
+              <i class="bi bi-person-badge"></i>
+              <div class="donor-info">
+                <span class="donor-label">Auteur du lot</span>
+                <span class="donor-name">{{ donorName }}</span>
+              </div>
+            </div>
+            <div class="status-context" *ngIf="!isEditMode">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>Statut initial : Disponible</span>
+            </div>
           </div>
 
           <!-- Niveau d'urgence -->

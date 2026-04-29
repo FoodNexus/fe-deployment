@@ -11,6 +11,8 @@ export interface ReceveurProfile {
   distanceMoyenneAcceptee: number;
   categoriesPreferees: string[];
   bonusMalus: number;
+  clusterId?: number; // Généré par Python (KMeans)
+  scoreFiabilite?: number; // Généré par Python (Random Forest)
 }
 
 export interface LearningResult {
@@ -40,5 +42,10 @@ export class LearningService {
   // ✅ Correspond à POST /api/learning/recalculer
   recalculerProfils(): Observable<any> {
     return this.http.post(`${this.apiUrl}/recalculer`, {});
+  }
+
+  // ✅ Correspond à POST /api/learning/python-cluster (Déclenche le script ia_engine.py)
+  runPythonAi(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/python-cluster`, null, { responseType: 'text' });
   }
 }

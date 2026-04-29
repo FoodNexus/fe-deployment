@@ -21,18 +21,18 @@
   <!-- SEARCH & ACTIONS -->
   <div class="tabs-card">
     <div class="search-flex">
-      <div class="search-input-group">
-        <label class="search-label">ID Receveur</label>
-        <input type="number" class="search-control" [(ngModel)]="receveurId" min="1" placeholder="Ex: 1">
+      <div class="search-info">
+        <i class="bi bi-people-fill me-2 text-purple"></i>
+        <span>Visualisez les profils d'apprentissage de tous les receveurs et leur historique de matching.</span>
       </div>
       <div class="search-btns">
-        <button class="btn-search purple-btn" (click)="chargerProfil()" [disabled]="loading">
-          <span *ngIf="loading" class="spinner"><i class="bi bi-arrow-repeat spin"></i></span>
-          <i class="bi bi-person-badge me-1" *ngIf="!loading"></i> Charger le profil
-        </button>
-        <button class="btn-search outline-btn" (click)="chargerTous()" [disabled]="loadingAll">
+        <button class="btn-search purple-btn me-2" (click)="chargerTous()" [disabled]="loadingAll">
           <span *ngIf="loadingAll" class="spinner"><i class="bi bi-arrow-repeat spin"></i></span>
-          <i class="bi bi-people me-1" *ngIf="!loadingAll"></i> Voir tous les profils
+          <i class="bi bi-people me-1" *ngIf="!loadingAll"></i> Rafraîchir
+        </button>
+        <button class="btn-search action ml-2" style="background-color: #2F3C7E; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 500; cursor: pointer;" (click)="lancerPythonAi()" [disabled]="loadingAi">
+          <span *ngIf="loadingAi" class="spinner"><i class="bi bi-gear spin me-1"></i>IA en cours...</span>
+          <span *ngIf="!loadingAi"><i class="bi bi-robot me-1"></i> Exécuter IA Python (K-Means)</span>
         </button>
       </div>
     </div>
@@ -50,9 +50,9 @@
           <i class="bi bi-person-circle"></i>
         </div>
         <div>
-          <h3>Profil du Receveur #{{ selectedProfil.receveurId }}</h3>
-          <p>Données d'apprentissage et scoring IA</p>
-        </div>
+        <h3>Receveur Partenaire</h3>
+        <p>Données d'apprentissage et scoring IA</p>
+      </div>
       </div>
 
       <div class="detail-body">
@@ -123,19 +123,19 @@
       <table class="modern-table">
         <thead>
           <tr>
-            <th>ID Receveur</th>
+            <th>#</th>
             <th>Taux Succès</th>
             <th>Matchs</th>
-            <th class="text-center">Livrés</th>
-            <th class="text-center">Refusés</th>
+            <th class="text-center">Zone (Cluster)</th>
+            <th class="text-center">Score IA</th>
             <th>Dist. Moy</th>
             <th>Bonus/Malus</th>
-            <th class="text-end">Actions</th>
+            <th class="text-end">Détail</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let p of paginatedProfiles">
-            <td><span class="case-id">#{{ p.receveurId }}</span></td>
+          <tr *ngFor="let p of paginatedProfiles; let i = index">
+            <td><span class="case-id">{{ (currentPageItems - 1) * pageSizeItems + i + 1 }}</span></td>
             <td>
               <div class="table-progress-group">
                 <span class="progress-text">{{ (p.tauxSucces * 100).toFixed(0) }}%</span>
@@ -150,8 +150,15 @@
               </div>
             </td>
             <td>{{ p.totalMatchs }}</td>
-            <td class="text-center"><span class="badge-pill count-success">{{ p.totalLivres }}</span></td>
-            <td class="text-center"><span class="badge-pill count-danger">{{ p.totalRefuses }}</span></td>
+            <td class="text-center">
+              <span class="badge-pill" style="background-color: #f3e5f5; color: #6a1b9a;" *ngIf="p.clusterId">Zone {{ p.clusterId }}</span>
+              <span class="text-muted small" *ngIf="!p.clusterId">-</span>
+            </td>
+            <td class="text-center">
+              <strong [ngClass]="{'text-green': p.scoreFiabilite && p.scoreFiabilite > 70, 'text-orange': p.scoreFiabilite && p.scoreFiabilite <= 70}">
+                {{ p.scoreFiabilite ? p.scoreFiabilite + '/100' : 'Non simulé' }}
+              </strong>
+            </td>
             <td>{{ p.distanceMoyenneAcceptee.toFixed(1) }} km</td>
             <td>
               <span class="score-mini" [ngClass]="p.bonusMalus >= 0 ? 'text-green' : 'text-red'">
