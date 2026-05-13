@@ -3,11 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { DigitalContract, ContractStatus } 
   from '../models/digital-contract.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class DigitalContractService {
 
-  private apiUrl = 'http://localhost:8083/api/contracts';
+  private apiUrl = `${environment.restApiAudit}/contracts`;
 
   constructor(private http: HttpClient) {}
 

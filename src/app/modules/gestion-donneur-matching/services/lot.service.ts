@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LotRequest, LotResponse } from '../models/lot.model';
 import { StatutLot, NiveauUrgence } from '../models/enums.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LotService {
 
-  private baseUrl = 'http://localhost:8082/api/lots';
+  private baseUrl = `${environment.restApiMatching}/lots`;
 
   constructor(private http: HttpClient) {}
 
@@ -59,7 +60,7 @@ export class LotService {
 
   lancerSmartBatching(idLot: number): Observable<string> {
     // On utilise le port 8082 comme le reste de ton API
-    const matchingUrl = 'http://localhost:8082/api/matching/fractionner';
+    const matchingUrl = `${environment.restApiMatching}/matching/fractionner`;
     return this.http.post(`${matchingUrl}/${idLot}`, {}, { responseType: 'text' });
   }
 }

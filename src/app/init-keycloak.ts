@@ -1,10 +1,11 @@
 import { KeycloakService } from 'keycloak-angular';
+import { environment } from '../environments/environment';
 
 export function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
     keycloak.init({
       config: {
-        url: 'http://localhost:8080',
+        url: environment.keycloakUrl,
         realm: 'foodnexus',
         clientId: 'foodnexus-app'  // Remplacez par votre client ID
       },

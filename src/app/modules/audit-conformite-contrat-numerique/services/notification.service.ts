@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, timer } from 'rxjs';
 import { switchMap, tap, retry } from 'rxjs/operators';
 import { AppNotification } from '../models/notification.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  private readonly API_URL = 'http://localhost:8083/api/notifications';
+  private readonly API_URL = `${environment.restApiAudit}/notifications`;
   
   private notificationsSubject = new BehaviorSubject<AppNotification[]>([]);
   notifications$ = this.notificationsSubject.asObservable();

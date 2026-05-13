@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 export interface ReceveurProfile {
   receveurId: number;
@@ -25,7 +26,7 @@ export interface LearningResult {
 
 @Injectable({ providedIn: 'root' })
 export class LearningService {
-  private apiUrl = 'http://localhost:8082/api/learning';
+  private apiUrl = `${environment.restApiMatching}/learning`;
 
   constructor(private http: HttpClient) {}
 

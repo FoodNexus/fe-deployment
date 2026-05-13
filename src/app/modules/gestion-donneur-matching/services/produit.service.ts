@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ProduitRequest, ProduitResponse } from '../models/produit.model';
 import { CategorieProduit } from '../models/enums.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProduitService {
 
-  private baseUrl = 'http://localhost:8082/api/produits';
+  private baseUrl = `${environment.restApiMatching}/produits`;
 
   constructor(private http: HttpClient) {}
 

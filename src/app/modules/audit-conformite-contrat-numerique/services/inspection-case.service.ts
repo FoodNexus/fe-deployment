@@ -3,11 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { InspectionCase, ResolutionStatus, SanitaryVerdict } 
   from '../models/inspection-case.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class InspectionCaseService {
 
-  private apiUrl = 'http://localhost:8083/api/inspection-cases';
+  private apiUrl = `${environment.restApiAudit}/inspection-cases`;
 
   constructor(private http: HttpClient) {}
 

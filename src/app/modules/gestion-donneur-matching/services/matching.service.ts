@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { MatchingResultDTO, ReceveurSimule } from '../models/matching-result.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MatchingService {
 
-  private baseUrl = 'http://localhost:8082/api/matching';
+  private baseUrl = `${environment.restApiMatching}/matching`;
 
   constructor(private http: HttpClient) {}
 
