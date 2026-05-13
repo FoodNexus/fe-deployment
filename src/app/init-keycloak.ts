@@ -6,8 +6,8 @@ export function initializeKeycloak(keycloak: KeycloakService) {
     keycloak.init({
       config: {
         url: environment.keycloakUrl,
-        realm: 'foodnexus',
-        clientId: 'foodnexus-app'  // Remplacez par votre client ID
+        realm: environment.keycloakRealm,
+        clientId: environment.keycloakClientId
       },
       initOptions: {
         onLoad: 'login-required',  // Plus de check-sso, plus besoin du fichier HTML

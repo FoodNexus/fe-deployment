@@ -6,7 +6,12 @@
  */
 export const environment = {
   production: false,
+  /** `ng serve` origin — list in Keycloak redirect URIs for local OIDC testing. */
+  appOrigin: 'http://localhost:4200/',
   keycloakUrl: 'http://localhost:8080',
+  keycloakIssuerOrigin: 'http://localhost:8080/realms/foodnexus',
+  keycloakRealm: 'foodnexus',
+  keycloakClientId: 'foodnexus-app',
 
   restApiMatching: 'http://localhost:8082/api',
   restApiAudit: 'http://localhost:8083/api',
