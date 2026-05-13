@@ -1,0 +1,33 @@
+# Phase 2: expose SPA via ingress-nginx using a stable hostname (DNS → node/LB IP).
+# Prerequisites: ingress-nginx installed; DNS A/AAAA for `foodnexus-app.example.com` (replace with your host) → reachable IP;
+# TLS: lab uses Secret `frontend-tls` (self-signed). Replace with cert-manager Certificate for production.
+#
+# HTTP NodePorts: ingress-nginx-controller **80:32706**, **443:31956** (confirm with kubectl).
+# Until DNS exists: curl -k --resolve foodnexus-app.example.com:31956:<AZURE_PIP> https://foodnexus-app.example.com:31956/
+#
+# ssl-redirect stays **false** while browsers reach HTTPS via NodePort **31956** (redirect would default to port **443**).
+#
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-application
+  namespace: default
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - foodnexus-app.example.com
+      secretName: frontend-tls
+  rules:
+    - host: foodnexus-app.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-application
+                port:
+                  name: http
