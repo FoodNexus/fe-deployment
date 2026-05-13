@@ -24,7 +24,7 @@ pipeline {
     )
     booleanParam(
       name: 'SET_DEPLOYMENT_IMAGE',
-      defaultValue: true,
+      defaultValue: false,
       description: 'After push: kubectl set image container frontend to IMAGE_NAME:IMAGE_TAG'
     )
     string(name: 'MANIFEST_DIR', defaultValue: 'k8s', description: 'Relative to workspace (this repo: k8s/)')
